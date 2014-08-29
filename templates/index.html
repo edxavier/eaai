@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block statics %}
+
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.flipcountdown.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/style.css">	
+	<link rel="stylesheet" href="{{STATIC_URL}}css/simpleweather.css">
+	
+
+	<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/jquery.flipcountdown.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/openWeather.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/jquery.simpleWeather.min.js'></script>
+
+   <script>
+  	$(document).ready(function(){
+  		$('#retroclockbox1').flipcountdown({
+  			//tzoneOffset:6,
+  			//am:true
+  			size:"sm"
+  		});
+getWeather(); //Get the initial weather.
+setInterval(getWeather, 600000);
+	function getWeather(){
+				$.simpleWeather({
+	    		location: 'Managua, Ni',
+			    woeid: '',
+			    unit: 'c',
+			    success: function(weather) {
+			    	if(weather.temp > 33) {
+				        $( "#clima" ).css( "background-color", "#ffcc00" );//#ff7d07
+				      } else if(weather.temp >= 30 & weather.temp <= 33) {
+				        $( "#clima" ).css( "background-color", "#ff7d07" );
+				      } else if(weather.temp >= 26 & weather.temp <= 29) {
+				        $( "#clima" ).css( "background-color", "#8aa427" );//6699ff
+				      }else if(weather.temp >= 21 & weather.temp <= 25) {
+				        $( "#clima" ).css( "background-color", "#6699ff" );//6699ff
+				      }
+				      else{
+				      	$( "#clima" ).css( "background-color", "#3366ff" );//6699ff
+				      }
+			     // console.log(weather.code)
+			      html = '<h2 id="tit"><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg;'+weather.units.temp+' </h2>';
+			      html += '<span class="label secondary radius">'+weather.city+'</span>';
+			      html += '<span class="label secondary radius">'+weather.currently+'</span>';
+			      html += '<span class="label  radius">Min. '+weather.low+'&deg;</span>';
+			      html += '<span class="label  radius">Max. '+weather.high+'&deg;</span>';
+			      html += '<span class="label secondary radius">Salida del sol: '+weather.sunrise+'</span>';
+			      html += '<span class="label secondary radius">Puesta del sol: '+weather.sunset+'</span>';
+			      html += '<span class="label secondary radius">Vientos desde '+weather.wind.direction+' a '+weather.wind.speed+' '+weather.units.speed+'</span>';
+			      html+='<div class="row">'
+			      for (f=1;f<3;f++){
+			      	html+='<div class="medium-6 columns">'
+			       	html +='<h6 style="color:white;font-weight:bold">Pronostico para el '+weather.forecast[f].date+'</h6>'
+			    	html += '<span class="label secondary radius">Min: '+weather.forecast[f].low+'&deg;</span>';
+			      	html += '<span class="label secondary radius">Max: '+weather.forecast[f].high+'&deg;</span>';
+			      	html += '<span class="label secondary radius">Estado: '+weather.forecast[f].text+'</span>';
+			      	//html += '<img src="'+weather.forecast[f].thumbnail+'" style="width:64px"/>';
+			      	//html += '<img src="'+weather.forecast[f].image+'" />';
+			      	html += '<h2><i class="icon-'+weather.forecast[f].code+'"></i> </h2>';
+			      	html+='</div>'
+			  		}
+			  	html+='</div>'
+			      $("#weather").html(html);
+			    },
+			    error: function(error) {
+			      $("#weather").html('<p>'+error+'</p>');
+			    }
+			  });
+	}
+
+ });  
+  </script>
+{% endblock statics %}
+
+
+{% block left_content %}
+{% load user_filter %}
+{% load tz %}
+	<label class='label'>Proximos Cumpleañeros</label>	<br> <br>
+	{% for usuario in  usuarios %}
+		{% if forloop.counter0 <= 5 and usuario.perfil.fecha_nacimiento  %}
+				{% if  usuario.first_name %}
+					<label class='label secondary radius'>{{usuario.first_name }} {{usuario.last_name |truncatewords:1}}</label>
+				{% else %}
+						<label class='label secondary radius'>{{usuario.username}} </label>
+				{% endif %}	
+				<label  class='label success radius'>{{usuario.perfil.fecha_nacimiento|cumple | date:"D d \d\e b \d\e\l Y"}} </label>
+				<label>En: <i class='fi-clock'></i> {{usuario.perfil.fecha_nacimiento|cumple | timeuntil}} </label>
+				<br> <br>
+		 {% endif %} 
+	{% endfor %}
+
+
+{% endblock left_content %}
+
+{% block main_content %}
+
+	<div class="row text-center">
+						<a href="http://www.facebook.com"><i class="fi-social-facebook size-24"></i></a>&nbsp;
+						<a href="http://www.twitter.com"><i class="fi-social-twitter size-24"></i></a>&nbsp;
+						<a href="http://www.youtube.com"><i class="fi-social-youtube size-24"></i></a>&nbsp;
+						<a href="http://www.dropbox.com"><i class="fi-social-dropbox size-24"></i></a>&nbsp;
+						<a href="http://www.instagram.com"><i class="fi-social-instagram size-24"></i></a>&nbsp;
+						<a href="http://www.linkedin.com"><i class="fi-social-linkedin size-24"></i></a>&nbsp;
+						<a href="http://www.hotmail.com"><i class="fi-social-windows size-24"></i></a>&nbsp;
+						<a href="http://www.totalxbox.com"><i class="fi-social-xbox size-24"></i></a>&nbsp;
+						<a href="http://www.yahoo.es"><i class="fi-social-yahoo size-24"></i></a>&nbsp;
+		<div id="retroclockbox1"></div>
+		<div class="show-for-small-only">
+			<label for="">Bienvenido {{user.username}}</label>
+		</div>
+
+		{% if not user.is_authenticated  %}
+			<div class="medium-7 columns text-center">
+		{% else %}
+		<div class="medium-6 columns text-center">
+				<div class="row text-center show-for-medium-up">
+					<div class=" medium-12  column orbit-container text-center"  >
+								<ul class="example-orbit" data-orbit  data-options="animation_speed:500;">
+									{% for  usuario in  usuarios %}
+									  <li>
+									    <img src="{{MEDIA_URL}}{{usuario.perfil.foto}}" alt="slide 1" />
+									    <div class="orbit-caption">					      
+									       {% if usuario.first_name %}
+									       		{{usuario.first_name}} {{usuario.last_name}}
+									       {% else %}
+									       		{{usuario.username}}
+									       {% endif %}				      
+									      	- Tel.: {{ usuario.perfil.telefono | default:"No especificado"}}
+									      	- Email: {{ usuario.email | default:"No especificado"}}
+									    </div>
+									  </li>
+									{% endfor %}
+								</ul>
+					</div>
+				</div>
+
+		</div>
+		<div class="medium-6 columns text-center">
+
+
+
+		{% endif %}
+			<div id='clima' class="panel radius show-for-medium-up">					
+				<div id="weather">
+					<img src="https://dl.dropboxusercontent.com/u/2086809/weatherfont/loader.gif" alt="Loading..." class="loading"><br />Intentando cargar datos del clima...
+				</div>
+			</div>
+		</div>	
+
+		{% if not user.is_authenticated  %}
+			<div class="medium-5 columns text-center">
+			<form class="custom loginfrm" method="POST">
+				 {% csrf_token %}
+				 {% if form.non_field_errors %}				 	
+				 	<div data-alert class="alert-box warning radius">
+					  Por favor ingrese un nombre de usuario y clave correctas
+					  <a href="#" class="close">&times;</a>
+					</div>	
+				 {% endif %}
+
+				<div class="panel radius">
+					<h5 class="loginTitle">Inicia Sesion <i class="fi-shield"></i> </h5>				    
+				     <div class="row collapse">
+					    <div class="small-3 large-2 columns">
+					      <span class="prefix"><i class="fi-torsos-male-female"></i>  </span>
+					    </div>
+					    <div class="small-9 large-10 columns">
+					      <input type="text" name="username" placeholder="Usuario" required>
+					    </div>
+					</div> 
+					<div class="row collapse">
+					    <div class="small-3 large-2 columns">
+					      <span class="prefix"><i class="fi-lock"></i>  </span>
+					    </div>
+					    <div class="small-9 large-10 columns">
+					      <input type="password" name="password" placeholder="Clave" required>
+					    </div>
+					</div>
+					<button class="button small large-12" data-hint="Seguidos" type="submit">
+						  <i class="fi-key"></i> Indentificame
+					</button>
+				</div>
+			</form>
+			</div>
+			<div class="row text-center show-for-medium-up">
+					
+					<div class=" medium-12  column orbit-container text-center" style="width:55%;" >
+								<ul class="example-orbit" data-orbit  data-options="animation_speed:500;">
+									{% for  usuario in  usuarios %}
+									  <li>
+									    <img src="{{MEDIA_URL}}{{usuario.perfil.foto}}" alt="slide 1" />
+									    <div class="orbit-caption">					      
+									       {% if usuario.first_name %}
+									       		{{usuario.first_name}} {{usuario.last_name}}
+									       {% else %}
+									       		{{usuario.username}}
+									       {% endif %}				      
+									      	- Telefono: {{ usuario.perfil.telefono | default:"No especificado"}}
+									      	- Correo: {{ usuario.email | default:"No especificado"}}
+									    </div>
+									  </li>
+									{% endfor %}
+								</ul>
+					</div>
+					<div class="medium-3 column">
+						&nbsp;
+					</div>	
+				</div>
+		{% endif %}	
+						
+				
+	</div>
+
+{% endblock  %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block statics %}
+
+<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css">
+<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
+<script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
+	<script>
+		  $(function() {
+		    $( "#accordion" ).accordion();
+		    $( "#tabs" ).tabs();
+		  });
+  	</script>
+{% endblock statics %}
+
+{% block main_content %}
+
+	<div class="row">
+		<div class="columns medium-2 text-center">
+			 <label>{{device.tipo.nombre}}</label>
+			<a class="th radius" href="../img/demos/demo2.png">
+				<img src="{{MEDIA_URL}}{{device.tipo.imagen}}" style='width: 80px' alt="">
+			</a>
+		</div>
+		<div class="columns medium-2 text-right">			
+			<label style='font-weight: bold'> Sistema Operativo:</label> 
+			<label style='font-weight: bold'>Marca:</label> 
+			<label style='font-weight: bold'>Modelo: </label> 
+			<label style='font-weight: bold'>Numero de serie: </label> 
+			<label style='font-weight: bold'>Direccion IP: </label> 
+			<label style='font-weight: bold'>Mascara de red: </label> 
+		</div>
+		<div class="columns medium-1">	
+			<label> {{device.os}}</label> 
+			<label> {{device.marca}}</label> 		
+			<label> {{device.modelo}}</label> 
+			<label> {{device.serie}}</label> 
+			<label> {{device.ip}}</label> 
+			<label> {{device.mascara_red}}</label> 
+		</div>
+		<div class="columns medium-2 text-right">			
+			<label style='font-weight: bold'> Ubicacion:</label> 
+			<label style='font-weight: bold'>Estado:</label> 
+			<label style='font-weight: bold'>Creado el: </label> 
+			<label style='font-weight: bold'>Actualizado: </label> 
+			<label style='font-weight: bold'>Creado por: </label> 
+		</div>
+		<div class="columns medium-3 end">	
+			<label> {{device.ubicacion.name}}</label> 
+			<label> {{device.operando}}</label> 		
+			<label> {{device.creado}}</label> 
+			<label> {{device.actualizado}}</label> 
+			<label> {{device.usuario.username}}</label> 
+		</div>
+	</div>
+<div class="row">
+	<div class="columns medium-12 ">
+		<div id="tabs">
+			  <ul>
+			    <li><a href="#tabs-1">Descripcion</a></li>
+			    <li><a href="#tabs-2">Servicios</a></li>
+			    <li><a href="#tabs-3">Componentes</a></li>
+			  </ul>
+			  <div id="tabs-1">
+			    <p>
+			    	{{device.descripcion}}
+			    </p>
+			  </div>
+			  <div id="tabs-2">
+			    <p>
+			    	{% for component in  components %}
+			    		{{component}}
+			    	{%empty%}
+			    		No existen componentes asociados
+			    	{% endfor %}
+			    </p>
+			  </div>
+			  <div id="tabs-3">
+			    <p>
+			    	{% for component in  components %}
+			    		{{component}}
+			    	{%empty%}
+			    		No existen componentes asociados
+			    	{% endfor %}
+			    </p>
+			  </div>
+		</div>
+	</div>
+</div>
+
+
+
+
+{% endblock main_content %}

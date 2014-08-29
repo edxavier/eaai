@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<dl class="sub-nav ">
+	<dt>Opciones:</dt>
+		<dd class="sn "><a href="{% url 'list_sistemas' %}">
+			<i class='fi-list-bullet'></i> Sistemas</a>
+		</dd>
+</dl>
+	<div class="row">
+		<h5 class='subheader txtlineBottongrey colorAzulOscuro2' >
+			Nuestros sistemas estan agrupados de la siguiente manera <i class="fi-arrow-down"></i>
+		</h5>
+		<ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-4" data-equalizer> 
+			{% for categoria in categorias %}			
+					<li>
+						<div class="panel" data-equalizer-watch>				
+							<img src="{{MEDIA_URL}}{{categoria.imagen}}" alt="slide 1" />
+							<h5 class="txtlineBottonBluenice"> {{ categoria.name }} </h5>
+							<small >{{categoria.description}}</small>
+						</div>
+					</li>
+			{% endfor %}
+		</ul>
+	</div>
+{% endblock main_content %}

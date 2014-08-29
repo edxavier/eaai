@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+
+{% block statics %}
+<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.datetimepicker.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.flipcountdown.css">
+	
+	<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/jquery.datetimepicker.js'></script>
+
+<script>
+	$(document).ready(function() {
+
+		$("#id_fecha_inicio").datetimepicker({
+	   		lang:'es',
+	   		format:'Y-m-d H:i',
+	   		startDate:'+1971/01/01',
+ 			maxDate:'+1970/01/01',//tommorow is maximum date calendar
+
+	    });
+	    $("#id_fecha_fin").datetimepicker({
+	   		lang:'es',
+	   		format:'Y-m-d H:i',
+	   		startDate:'+1971/01/01',
+	   		maxDate:'+1970/01/01',//tommorow is maximum date calendar
+	    });
+
+		$("article").hover(function() {
+			$(this).css('box-shadow', '7px 7px 5px #888');
+//			$(this).animate({ 'zoom': 1.02 }, 100);
+			
+		}, function() {
+			$(this).css('box-shadow', ' 2px 2px 10px #102648');
+//			$(this).animate({ 'zoom': 1 }, 100);
+		});
+
+	});
+</script>
+{% endblock statics %}
+
+{% block left_content %}
+<br>
+
+<h5  class="subheader">Categorias</h5 >
+		<ul class="side-nav">
+		{% for categoria in categorias %}
+			<li class="snav text-right">
+				<a href="{% url 'filter_notas' categoria.pk %}">
+					{{categoria.name}}
+				</a>
+			</li>
+		{% endfor %}
+		</ul>
+{% endblock left_content %}
+
+
+{% block main_content %}
+
+
+	<dl class="sub-nav ">
+		<dt>Opciones:</dt>
+			<dd class="sn "><a href="{% url 'list_notas' %}">
+				<i class='fi-list-bullet'></i> Todas</a>
+			</dd>
+			<dd class="sn "><a href="{% url 'new_nota' %}">
+				<i class='fi-plus'></i> Crear nota</a>
+			</dd>
+	</dl>
+
+
+
+<form method="POST">
+	{% csrf_token %}
+	<div class="row collapse">
+		<div class="row collapse ">
+			<div class="small-2 medium-1 columns text-right">
+	        	<i class='fi-calendar' style='font-size:35px '></i>
+	        	&nbsp;
+	        </div>
+	        <div class="small-3 medium-2 columns">
+	          <input type="text" id='id_fecha_inicio' placeholder='Fecha Inicial' name='fecha_inicial' autocomplete="off" required>
+	        </div>
+	        <div class="small-3 medium-1 columns text-right">
+	        	<i class='fi-calendar' style='font-size:35px '></i>
+	        	&nbsp;
+	        </div>
+	        <div class="small-2 medium-2 end columns">
+	          <input type="text" id='id_fecha_fin' placeholder='Fecha Final' name='fecha_final' autocomplete="off" required>
+	        </div>
+	        <div class="small-3 medium-1 columns">
+	        	&nbsp;
+	        </div>
+            <div class="small-2 medium-2 end columns">
+		        <button class="button small " data-hint="Seguidos" type="submit">
+				  <i class="fi-magnifying-glass"></i> Buscar
+				</button>
+	        </div>
+	    </div>
+	    <div class="row">
+	    	<div class="small-2 medium-1 columns text-right">
+	        	<i class='fi-page-search' style='font-size:30px '></i>
+	        </div>
+	        <div class="small-3 medium-4 end columns">
+	          <input type="text" placeholder='Termino de busqueda (Opcional)' name='search_text'>
+	        </div>
+	    </div>
+  	</div>
+</form>
+
+
+
+<section>
+	{% load tz %}
+		<label class='label round success'>Resultados: {{notas.count}}</label>
+		{% for  nota in notas %}
+			<article id='{{nota.pk}}'>
+				<div class="row">
+					<div class="medium-2 columns text-center autor">
+						<img src="{{MEDIA_URL}}{{nota.user.perfil.foto}}" alt="">
+						<label class='small-12 label radius'>{{nota.user.first_name}}</label>
+					</div>
+					<div class="medium-10 columns nota">
+						<div class="clearfix cabecera">
+							<label class="left"> {{nota.created_at | date:"D d \d\e F \d\e\l Y " }} | {{nota.created_at | utc |  date:"D d \d\e F \d\e\l Y "}}<br>
+								{{nota.created_at | date:"h:i a  (\ e O \)"  }} |
+								{{nota.created_at | utc |  date:"h:i a (\ e O \) "  }}
+						    </label>
+						    <label class="right">{{nota}}</label>
+						</div>
+
+						<div class="clearfix cuerpo">
+							<label class="left estado{{nota.severity.pk}} radius"> <i class='fi-flag'></i> {{nota.severity.name}} </label><br>
+							{{nota.description|safe|truncatewords:20}}
+							{% if nota.keywords %}
+							<label>
+								<i class='fi-pricetag-multiple'></i> {{nota.keywords}}
+							</label>
+							{% endif %}
+							{% if nota.referencia %}
+							<label>
+								<i class='fi-link'></i> referencia a <a href="#{{nota.referencia.pk}}">{{nota.referencia}}</a>
+							</label>
+							{% endif %}
+						</div>
+						<div class="clearfix tags">
+							<label class='left'><i class='fi-clock'></i> Hace {{nota.created_at|timesince}}</label>
+							<label class="right"><a href="{% url 'detail_nota' nota.pk %}"> <i class='fi-zoom-in'></i> Ver detalles</a></label>
+						</div>
+					</div>
+				</div>
+			</article>
+		
+		{% empty %}
+				<h4><i class='fi-trees'></i> No hay elementos que mostrar</h4>
+		{% endfor %}			
+
+</section>
+{% endblock main_content %}

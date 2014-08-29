@@ -1,0 +1,248 @@
+@import 'nib'
+@import 'nib/gradients'
+@import 'nib/vendor'
+
+vendor-prefixes = o mz ms webkit official
+
+colorRosadoOscuro= #8e0152
+verdetierno = #e6f5d0
+azulCeleste= #0084EE
+negroBajo=#171A1C
+grisClaro=#E7E7F4
+grisOscuro=#444
+naranjaClaro=#F38630
+naranja=#FA6900
+verdeMusgo =#BEC17F
+celeste=#B0C8D1
+colorVerdeYel=#097168
+colorSapote=#fa482e
+colorgrisNice=#638270
+colorNarangaOscuro=#c14b03
+colorAzulOscuro=#2b434f
+colorAzulOscuro2=#00778a
+colorLila=#551177
+colorRosadoChicha=#ff0077
+colorCoral=#ff6666
+colorAzulSuperLight=#99ccff
+colorNeutral=#7f7f7f
+colorRojoScarlet=#cc0000
+colorAzul3=#00b6af
+cvar=#00b6af
+
+header
+	background-color negroBajo
+	border-bottom 6px solid azulCeleste
+	padding 0.5em
+	padding-left 2em
+	transition 2s 
+	&:hover
+		border-bottom 6px solid colorRojoScarlet
+		h4
+			border-left 1px solid naranjaClaro
+		h6
+			background-color rgba(colorSapote,0.4)
+	h4
+		color grisClaro
+		transition 2s 
+		border-left 1px solid azulCeleste
+		font-weight bold
+		padding-left 10px
+		padding-bottom 0px
+		//border-radius: 0 10px 0 10px
+		//border-bottom 2px solid rgba(azulCeleste, 0.3)
+	h6
+		padding-left 10px
+		color white
+		padding-top 0px	
+		transition 2s 
+		background-color rgba(azulCeleste,0.4)
+		width 70%
+		border-radius: 0 10px 0 10px
+
+
+footer
+	background-color negroBajo
+	color rgba(grisClaro,0.5)
+	border-top 4px solid azulCeleste
+	padding-top 10px
+
+
+.credit
+	&:before
+		content "--- "
+	&:after
+		content "--- "
+
+.snav
+	background-color rgba(grisClaro,0.6)
+	border-radius 5px
+	&:hover
+		background-color #ebe7e1
+		color white
+
+ .detalleperfil
+ 	border-left 3px solid rgba(azulCeleste,0.7)
+
+.user
+	color white
+
+.row
+	max-width 1350px		
+
+.loginfrm
+	div
+		//background-color cvar
+	h5
+		color colorAzulOscuro2
+		border-bottom 1px solid rgba(azulCeleste,0.7)
+		padding-bottom 4px
+
+.pagina
+	//border-bottom 1px solid rgba(azulCeleste,0.2)
+	padding 5px 5px 5px 5px 
+	.subheader
+		border-right 1px solid rgba(azulCeleste,0.5)
+		color azulCeleste
+		padding 5px 5px 5px 5px 
+	small
+		font-style oblique
+		color rgba(azulCeleste,0.8)
+		font-weight bold
+
+.txtlineBottongrey
+	border-bottom 0.1em solid rgba(colorgrisNice,0.7)
+	padding-bottom 0.1em 
+	margin-bottom 1em
+
+.txtlineBottonCoral
+	border-bottom 0.1em solid rgba(colorCoral,0.7)
+	padding-bottom 0.1em 
+	margin-bottom 1em
+
+.txtlineBottonBluenice
+	border-bottom 0.1em solid rgba(colorAzul3,0.7)
+	padding-bottom 0.1em 
+	margin-bottom 1em
+
+
+
+
+.colorVerdeYel
+	color colorVerdeYel
+.colorSapote
+	color colorSapote
+.colorgrisNice
+	color colorgrisNice
+.colorNarangaOscuro
+	color colorNarangaOscuro
+.colorAzulOscuro
+	color colorAzulOscuro
+.colorAzulOscuro2
+	color colorAzulOscuro2
+.colorLila
+	color colorLila
+.colorRosadoChicha
+	color colorRosadoChicha
+.colorCoral
+	color colorCoral
+.colorAzulSuperLight
+	color colorAzulSuperLight
+.colorNeutral
+	color colorNeutral
+.colorRojoScarlet
+	color colorRojoScarlet
+.colorAzul3
+	color colorAzul3
+
+.badge
+	border-radius 15px
+	padding 1px 4px 1px 4px
+	color white
+	font-size 11px
+	background-color colorNeutral 
+
+
+
+.estado1
+	background-color #4d9221 //verde
+	font-size 11px
+	color white
+	border-radius 4px
+	padding 2px 4px 2px 4px
+.estado2
+	background-color azulCeleste
+	font-size 10px
+	color white
+	border-radius 4px
+	padding 2px 4px 2px 4px
+.estado3
+	background-color grisOscuro
+	font-size 10px
+	color white
+	border-radius 4px
+	padding 2px 3px 2px 3px
+.estado4
+	background-color #faa818// amarillo
+	font-size 11px
+	color white	
+	border-radius 4px
+	padding 2px 3px 2px 3px
+.estado5
+	background-color #cf5f3b // salmon
+	font-size 10px
+	color white
+	border-radius 4px
+	padding 2px 3px 2px 3px
+.estado6
+	background-color #ff0000 // rojo
+	font-size 10px
+	color white
+	border-radius 4px
+	padding 2px 3px 2px 3px
+
+input
+	&:focus
+		color colorVerdeYel
+
+.normal
+	background-color yellow
+
+section
+	article
+		border 1px solid celeste
+		box-shadow: 2px 2px 10px  colorVerdeYel //#102648
+		border-radius 5px
+		margin 1em 0em 1em 0em
+		//arriba derecha abajo iz
+		padding 0.5em 1em 1em 0.5em
+		text-decoration none
+		.nota
+			.cabecera
+				border-bottom 0.1em solid rgba(azulCeleste,0.7)				
+				padding 0.2em 0.5em 0.2em 0.5em
+				.left
+					font-weight 700
+				.right
+					font-weight bold
+				.estado
+					color colorAzulOscuro2
+					text-decoration none
+			.cuerpo
+				background-color grisClaro
+				border-radius 5px
+				margin 0.7em 0em 1em 0em
+				padding 0.5em 1em 1em 0.5em
+				p
+					padding 1px
+					font-size 14px
+				label
+					small
+						p
+							font-size 10px
+			.tags
+				border-top 0.1em solid rgba(colorAzulSuperLight,0.7)
+		
+				
+
+
+

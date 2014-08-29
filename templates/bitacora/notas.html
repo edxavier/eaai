@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+
+{% block statics %}
+<script>
+	$(document).ready(function() {
+		$("article").hover(function() {
+			$(this).css('box-shadow', '7px 7px 5px #888');
+//			$(this).animate({ 'zoom': 1.02 }, 100);
+			
+		}, function() {
+			$(this).css('box-shadow', ' 2px 2px 10px #102648');
+//			$(this).animate({ 'zoom': 1 }, 100);
+		});
+
+	});
+</script>
+{% endblock statics %}
+
+{% block left_content %}
+<br>
+
+<h5  class="subheader">Categorias</h5 >
+		<ul class="side-nav">
+		{% for categoria in categorias %}
+			<li class="snav text-right">
+				<a href="{% url 'filter_notas' categoria.pk %}">
+					{{categoria.name}}
+				</a>
+			</li>
+		{% endfor %}
+		</ul>
+{% endblock left_content %}
+
+
+{% block main_content %}
+
+
+	<dl class="sub-nav ">
+		<dt>Opciones:</dt>
+			<dd class="sn "><a href="{% url 'list_notas' %}">
+				<i class='fi-list-bullet'></i> Todas</a>
+			</dd>
+			<dd class="sn "><a href="{% url 'new_nota' %}">
+				<i class='fi-plus'></i> Crear nota</a>
+			</dd>
+			<dd class="sn "><a href="{% url 'search_notas' %}">
+				<i class='fi-magnifying-glass'></i> Busqueda</a>
+			</dd>
+	</dl>
+<form method="POST">
+	{% csrf_token %}
+	<div class="row collapse">
+		<div class="row collapse ">
+	        <div class="small-10 medium-4 columns">
+	          <input type="text" placeholder="Busqueda Rapida" name='search_text'>
+	        </div>
+	        <div class="small-2 medium-2 end columns">
+	          <a href="#" class="button postfix"><i class='fi-page-search'></i> Ir</a>
+	        </div>
+	    </div>
+  	</div>
+</form>
+<section>
+	{% load tz %}
+		{% for  nota in notas %}
+			<article id='{{nota.pk}}'>
+				<div class="row">
+					<div class="medium-2 columns text-center autor">
+						<img src="{{MEDIA_URL}}{{nota.user.perfil.foto}}" alt="">
+						{% if  nota.user.first_name %}
+							<label class='small-12 label radius'>{{nota.user.first_name}} {{nota.user.last_name |truncatewords:1}}</label>
+						{% else %}
+							<label class='small-12 label radius'>{{nota.user.username}}</label>
+						{% endif %}
+					</div>
+					<div class="medium-10 columns nota">
+						<div class="clearfix cabecera">
+							<label class="left"> {{nota.created_at | date:"D d \d\e F \d\e\l Y " }} | {{nota.created_at | utc |  date:"D d \d\e F \d\e\l Y "}}<br>
+								{{nota.created_at | date:"h:i a  (\ \l\o\c\a\l \)"  }} -
+								{{nota.created_at | utc |  date:"H:i  (\ e O \) "  }}
+						    </label>
+						    <label class="right">{{nota}}</label>
+						</div>
+
+						<div class="clearfix cuerpo">
+							<label class="left estado{{nota.severity.pk}} radius"> <i class='fi-flag'></i> 
+								<span data-tooltip class="" title="{{nota.severity.description}}">
+									{{nota.severity.name}}
+								</span>
+			
+							 </label><br>
+							{{nota.description|safe|truncatewords:35}}
+							{% if nota.keywords %}
+							<label>
+								<i class='fi-pricetag-multiple'></i> {{nota.keywords}}
+							</label>
+							{% endif %}
+							{% if nota.referencia %}
+							<label>
+								<i class='fi-link'></i> referencia a <a href="#{{nota.referencia.pk}}">{{nota.referencia}}</a>
+							</label>
+							{% endif %}
+						</div>
+						<div class="clearfix tags">
+							<label class='left'><i class='fi-clock'></i> Hace {{nota.created_at|timesince}}</label>
+							<label class="right"><a href="{% url 'detail_nota' nota.pk %}"> <i class='fi-zoom-in'></i> Ver detalles</a></label>
+						</div>
+					</div>
+				</div>
+			</article>
+		
+		{% empty %}
+				<h4><i class='fi-trees'></i> No hay elementos que mostrar</h4>
+		{% endfor %}			
+
+</section>
+{% endblock main_content %}

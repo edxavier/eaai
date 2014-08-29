@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+
+
+
+{% block left_content %}
+<br>
+<h5  class="subheader">Categorias</h5 >
+		<ul class="side-nav">
+		{% for categoria in categorias %}
+			<li class="snav text-right">
+				<a href="{% url 'filter_sistemas' categoria.pk %}">
+					{{categoria.name}} <span class="badge ">&nbsp;{{ categoria.sistema_set.all.count }}&nbsp;</span>
+				</a>
+			</li>
+		{% endfor %}
+		</ul>
+{% endblock left_content %}
+
+{% block main_content %}
+
+<dl class="sub-nav ">
+	<dt>Opciones:</dt>
+		<dd class="sn "><a href="{% url 'list_sistemas' %}">
+			<i class='fi-list-bullet'></i> Todos</a>
+		</dd>
+		<dd class="sn "><a href="{% url 'list_categorias' %}">
+			<i class='fi-list-bullet'></i> Categorias</a>
+		</dd>
+		<dd class="sn "><a href="/admin/sistemas/sistema/add/">
+			<i class='fi-lightbulb'></i> Agregar nuevo</a>
+		</dd>
+</dl>
+
+{% if  sistemas.count > 0  %}
+	<ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-4" data-equalizer> 
+
+		{% for sistema in sistemas %}			
+			<li>
+				<div class="panel" data-equalizer-watch>				
+					
+					<h5 class="txtlineBottonBluenice"> {{ sistema.short_name }} </h5>
+					<small >{{sistema.description}}</small><br>			
+					<a href="{% url 'detail_sistema' sistema.pk %}" class="button tiny">Ver detalles</a>	
+				</div>
+			</li>
+		{% endfor %}
+	</ul>
+
+{% elif sistema %}
+	<div class="row">
+		<div class="medium-2 column">	
+			<img src="{{MEDIA_URL}}{{sistema.imagen}}" alt="slide 1" />
+		</div>
+		<div class="medium-10 column">			
+				<div class="panel radius">	
+					<h5 class="txtlineBottonBluenice"> {{ sistema.name }} ( {{sistema.short_name}} )</h5>
+					<p >{{sistema.description}}</p>
+					<div class="row">
+						<div class="small-5 medium-2 column text-right">
+							<label>Tipo de sistema: </label>
+							<label>Estado: </label>
+							<label>Categoria: </label>
+							<label>Ubicacion: </label>
+							<label>Creado Por: </label>
+							<label>Creado el: </label>
+						</div>
+						<div class="small-5 medium-5 column end">
+							<label>
+								{% if sistema.sys_type == "SW" %} Software {% else %}Hardware{% endif %}  <br>
+								{% if sistema.en_funcionamiento %}En funcionamiento {% else %}Fuera de Servicio{% endif %} <br>
+								{{sistema.category.name}} <br>
+								{{sistema.ubication.name}} <br>
+								{{sistema.user.username}} <br>
+								{{sistema.created_at}} <br>
+							</label>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+
+{% else %}
+	<h4><i class='fi-trees'></i> No hay elementos que mostrar</h4>
+{% endif %}
+
+{% endblock main_content %}

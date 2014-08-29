@@ -1,0 +1,100 @@
+
+
+{% extends "base.html" %}
+
+{% block statics %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.datetimepicker.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.flipcountdown.css">
+	
+	<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/jquery.datetimepicker.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/jquery.flipcountdown.js'></script>
+
+   <script>
+  	$(document).ready(function(){
+  		$("#id_fecha_nacimiento").datetimepicker({
+	   		lang:'es',
+	   		format:'d/m/Y H:i',
+	   		startDate:'+1971/01/01'
+	    });
+  		//$('#retroclockbox1').flipcountdown({
+  			//tzoneOffset:6,
+  		//	am:true
+  		//});
+  	});  
+  </script>
+{% endblock statics %}
+
+{% block main_content %}
+
+	<dl class="sub-nav ">
+		<dt>submenu:</dt>
+		<dd><a href="{% url 'perfil' %}"><i class='fi-folder'></i> Perfil</a></dd>
+	</dl>
+	{% if  form.fecha_nacimiento.errors %}
+		<div data-alert class="alert-box warning radius">
+			{{form.fecha_nacimiento.errors}}
+			<a href="#" class="close">&times;</a>
+		</div>
+	{% endif %}
+
+
+<form method='POST' enctype='multipart/form-data'>
+	{% csrf_token %}
+
+	<div class="row">
+		
+		<div class="detalleperfil medium-9 columns text-left ">
+			<h6 class='colorAzulOscuro2 detalleperfil txtlineBottonBluenice'> 
+				<i class='fi-burst'></i> Informacion de Perfil
+			</h6>	
+			<div class="row">				
+				<div class="small-12 columns">
+					<div class="row">
+						<div class="medium-6 columns">
+							{{form.as_p}}	
+						</div>
+						<div class="medium-6 columns">
+							<div class="row">
+								<div class="small-12 columns ">
+									<label for="">Nombres</label>
+									<input type="text" placeholder='Nombres' name='nombres' value='{{ user.first_name }}'>
+								</div>
+							</div>
+							<div class="row">
+								<div class="small-12 columns ">
+									<label for="">Apellidos</label>
+									<input type="text" placeholder='Apellidos' name='apellidos' value='{{ user.last_name }}'>
+								</div>
+							</div>
+							<div class="row">
+								<div class="small-12 columns ">
+									<label for="">E-mail</label>
+									<input type="text" placeholder='E-Mail' name='email' value='{{ user.email }}'>
+								</div>
+							</div>
+						</div>
+					</div>
+											
+					
+					{% comment %}
+					{% endcomment %}
+				
+				</div>
+			</div>
+			<br>
+		
+			<button class="button small " data-hint="Seguidos" type="submit">
+			  <i class="fi-save"></i> Guardar Cambios
+			</button>
+		</div>
+		
+
+	</div>
+	
+	<br>
+</form>
+	
+{% endblock main_content %}

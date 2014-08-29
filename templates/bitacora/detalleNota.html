@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+	
+Detalle de {{nota}}
+<section>		
+	<dl class="sub-nav ">
+		<dt>Opciones:</dt>
+			<dd class="sn "><a href="{% url 'list_notas' %}">
+				<i class='fi-list-bullet'></i> Todas</a>
+			</dd>
+			<dd class="sn "><a href="{% url 'new_nota' %}">
+				<i class='fi-plus'></i> Crear nota</a>
+			</dd>
+			<dd class="sn "><a href="{% url 'search_notas' %}">
+				<i class='fi-magnifying-glass'></i> Busqueda</a>
+			</dd>
+	</dl>	
+
+			<article id='{{nota.pk}}'>
+				<div class="row">
+					<div class="medium-2 columns text-center autor">
+						<img src="{{MEDIA_URL}}{{nota.user.perfil.foto}}" alt="">
+						<label class='small-12 label radius'>{{nota.user.first_name}}</label>
+					</div>
+					<div class="medium-10 columns nota">
+						<div class="clearfix cabecera">
+							<label class="left"> {{nota.created_at | date:"D d \d\e F \d\e\l Y " }} <br>
+								{{nota.created_at | date:"h:i a  (\ e O \)"  }}
+						    </label>
+						    <label class="right">{{nota}}</label>
+						</div>
+
+						<div class="clearfix cuerpo">
+							<label class="left estado{{nota.severity.pk}} radius"> <i class='fi-flag'></i> {{nota.severity.name}} </label><br>
+							
+							 {{nota.description|safe}}
+							
+							<label>
+								Palabras clave:
+								<i class='fi-pricetag-multiple'></i> {{nota.keywords|default:"No especificadas"}} <br>
+							</label>
+
+							{% if nota.referencia %}
+								<label>
+									 Referencia:<i class='fi-link'></i> <a href="{% url 'detail_nota' nota.referencia.pk %}">{{nota.referencia}}</a>
+
+									 <small style='font-style:italic;'>
+									 	{{nota.referencia.description|safe}}
+									 </small>
+								</label>
+							{% else %}
+								<label> Referencia:<i class='fi-link'></i> No especificada</label>
+							{% endif %} <br>
+
+							<ul>					
+							<h6>Sistemas relacionados a la nota</h6>							
+							{% for sistema in sistemas %}
+								<li><label class='label round'>{{sistema.name}}</label></li>
+							{% empty %}
+								<label>No hay sistemas relacionados</label>
+							{% endfor %}
+							{% if nota.adjuntos %}
+								<br><label >Archivos adjuntos: </label> <a href="{{MEDIA_URL}}{{nota.adjuntos}}">{{nota.adjuntos}}</a>
+							{% endif %}
+							</ul>
+							<label>Modificada el: {{nota.updated_at| date:"D d \d\e F \d\e\l Y \a \l\a\s h:i a" }}</label>
+						</div>
+						<div class="clearfix tags">
+							<label class='left'><i class='fi-clock'></i> Hace {{nota.created_at|timesince}}</label>
+						</div>
+					</div>
+				</div>
+			</article>		
+
+</section>
+
+{% endblock main_content %}

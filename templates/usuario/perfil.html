@@ -1,0 +1,145 @@
+
+{% extends "base.html" %}
+
+{% block main_content %}
+
+
+	<div class="row">
+		<div class="medium-3 columns text-right">
+			<img src="{{MEDIA_URL}}{{ user.perfil.foto}}" alt="" >			
+			<span class="label large-12  success">
+				{% if  user.first_name  %}
+					{{  user.first_name }} {{  user.last_name }}
+				{% else %}
+					No especificado
+				{% endif %}	
+				 
+			</span> 
+		</div>
+		<div class="detalleperfil medium-9 columns text-left ">
+
+			<dl class="sub-nav ">
+				<dt>Opciones:</dt>
+				<dd class="sn "><a href="{% url 'actualizar_clave' %}">
+					<i class='fi-lock'></i> Cambiar mi clave</a>
+				</dd>
+				<dd class="sn "><a href="{% url 'actualizar_perfil' %}">
+					<i class='fi-list-bullet'></i> Cambiar mis datos</a>
+				</dd>
+			</dl>
+
+			<h6 class='colorAzulOscuro2 detalleperfil txtlineBottonBluenice'> 
+				<i class='fi-burst'></i> Informacion Basica
+			</h6>	
+			<div class="row">
+				<div class="small-3 columns ">
+					<span class="label  large-12 text-right" style='font-weight: bold'>
+						Usuario: <i class='fi-torso'></i>
+					</span><br>
+					<span class="label  large-12 text-right" style='font-weight: bold'>
+						Acceso: <i class='fi-clock'></i>
+					</span><br>
+					<span class="label  large-12 text-right" style='font-weight: bold'>
+						Onomastico: <i class='fi-crown'></i>
+					</span> <br>
+					<span class="label  large-12 text-right" style='font-weight: bold'>
+						Cargo: <i class='fi-torso-business'></i>
+					</span> <br>
+				</div>
+				<div class="small-9 columns">
+					
+					<div class="row">
+						<div class="small-12 columns ">
+							<span class="label  large-12 text-left" >								
+								{{user.username}}									 
+							</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="small-12 columns ">
+							<span class="label  large-12 text-left" >								
+								Hace {{ user.last_login | timesince}}
+							</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="small-12 columns ">
+							<span class="label  large-12 text-left" >
+								{% if  user.perfil.fecha_nacimiento %}
+									{{ user.perfil.fecha_nacimiento|date:'d - M - Y'}} 
+									
+								{% else %}
+									No especificado
+								{% endif %}								 
+							</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="small-12 columns ">
+							<span class="label  large-12 text-left" >
+								{% if  user.perfil.cargo %}
+									{{ user.perfil.cargo}} 
+								{% else %}
+									No especificado
+								{% endif %}								 
+							</span>
+						</div>
+					</div>
+				
+				</div>
+			</div>
+			<br>
+
+			<h6 class='colorAzulOscuro2 detalleperfil txtlineBottonBluenice'> 
+				<i class='fi-burst'></i> Informacion de Contacto
+			</h6>	
+			<div class="row">
+				<div class="small-3 columns ">
+					<div class="row">
+						<div class="small-12 columns ">
+							<span class="label  large-12 text-right" style='font-weight: bold'>
+								E-Mail: <i class='fi-mail'></i>
+							</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="small-12 columns ">
+							<span class="label  large-12 text-right" style='font-weight: bold'>
+								Telefono: <i class='fi-telephone'></i>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="small-9 columns">
+					<div class="row">
+						<div class="small-12 columns ">
+							<span class="label  large-12 text-left" >
+								{% if  user.email %}
+									{{ user.email }} 
+								{% else %}
+									No especificado
+								{% endif %}								 
+							</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="small-12 columns ">
+							<span class="label  large-12 text-left" >								
+								{% if   user.perfil.telefono  %}
+									{{ user.perfil.telefono }}  
+								{% else %}
+									No especificado
+								{% endif %}
+							</span>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		
+		</div>
+	</div>
+	<br>
+
+	
+{% endblock main_content %}

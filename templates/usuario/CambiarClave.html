@@ -1,0 +1,68 @@
+
+{% extends "base.html" %}
+
+
+{% block main_content %}
+	
+<dl class="sub-nav ">
+	<dt>submenu:</dt>
+	<dd><a href="{% url 'perfil' %}"><i class='fi-folder'></i> Perfil</a></dd>
+</dl>
+<div class="panel">
+	<label>Una vez que todos los datos sean validados correctamente, seras redirigido a tu perfil</label>
+</div>
+
+	<form method='POST' action="" data-abide>
+		{% csrf_token %}
+		<div class="row">			
+			<div class="medium-6 columns">
+				<label for="id_old_password">{{form.old_password.label}}</label>
+				<input id='id_old_password' type="password" name='old_password' required placeholder='Contraseña antigua'>
+				<small class="error">Este campo es requerido</small>
+				{% if form.old_password.errors %}
+					{% for  error in form.old_password.errors %}
+						<div data-alert class="alert-box warning ">
+						  {{error}}	
+						  <a href="#" class="close">&times;</a>
+						</div>
+					{% endfor %}						
+				{% endif %}			
+			</div>
+		</div>	
+		<div class="row">
+			<div class="medium-6 columns">
+				<label for="id_new_password1">{{form.new_password1.label}}</label>
+				<input id='id_new_password1' type="password" name='new_password1' required placeholder='Nueva Contraseña'>
+				<small class="error">Este campo es requerido</small>
+				{% if form.new_password1.errors %}
+					{% for  error in form.new_password1.errors %}
+						<div data-alert class="alert-box warning ">
+						  {{error}}	
+						  <a href="#" class="close">&times;</a>
+						</div>
+					{% endfor %}						
+				{% endif %}	
+			</div>
+			<div class="medium-6 columns">
+				<label for="id_new_password2">{{form.new_password2.label}}</label>
+				<input id='id_new_password2' type="password" name='new_password2' required placeholder='Confirme la Nueva Contraseña' data-equalto="id_new_password1">
+				<small class="error">Este campo es requerido y debe coincidir con la nueva contraseña</small>
+				{% if form.new_password2.errors %}
+					{% for  error in form.new_password2.errors %}
+						<div data-alert class="alert-box warning ">
+						  {{error}}	
+						  <a href="#" class="close">&times;</a>
+						</div>
+					{% endfor %}						
+				{% endif %}	
+			</div>
+			<div class="medium-4 columns">
+			</div>
+		</div>
+		<button class="button small " data-hint="Seguidos" type="submit">
+		  <i class="fi-save"></i> Guardar Cambios
+		</button>
+	</form>
+	
+	
+{% endblock main_content %}

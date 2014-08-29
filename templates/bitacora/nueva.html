@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block statics %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/select2.css">	
+
+	<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
+		<script src='{{STATIC_URL}}js/vendor/tinymce/tinymce.min.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/select2.min.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/select2_locale_es.js'></script>
+	<script>
+		$(document).ready(function() {
+			tinymce.init({
+			    selector: "textarea",
+			    language : 'es',
+			    browser_spellcheck : true 
+			 });
+			 $("#id_severity").select2({
+			 	  width: "resolve"
+			 }); 
+
+			 $("#id_referencia").select2({
+			 	  width: "resolve"
+			 }); 
+
+
+			 $("#sistemas_cbox").select2({
+			 	  width: "resolve",
+			 	  placeholder:"Seleccione los sistemas relacionados a la nota"
+			 }); 
+
+			 $("#sistemas_cbox").on("select2-selecting",function(event) {
+			 	valor = event.val
+			 	$('#id_systems option[value='+valor+']').attr('selected','selected');
+			 });
+
+
+		});
+	</script>
+
+{% endblock statics %}
+
+{% block left_content %}
+
+{% endblock left_content %}
+
+{% block main_content %}
+	
+	<dl class="sub-nav ">
+		<dt>Opciones:</dt>
+			<dd class="sn "><a href="{% url 'list_notas' %}">
+				<i class='fi-list-bullet'></i> Todas</a>
+			</dd>
+			<dd class="sn "><a href="{% url 'search_notas' %}">
+				<i class='fi-magnifying-glass'></i> Busqueda</a>
+			</dd>
+	</dl>	
+
+
+<form method='POST' enctype='multipart/form-data' >
+	{% csrf_token %}
+	<div class="row">
+		<div class="medium-1 columns text-right">{{form.severity.label_tag}}</div>
+		<div class="medium-4 columns "> 
+			<span data-tooltip class="" title="Indica el grado de incidencia de la nota">
+				{{form.severity}}
+			</span>
+			{% if form.severity.errors %}
+				<div data-alert class="alert-box warning radius">
+					Es necesario que indique el estado
+					 <a href="#" class="close">&times;</a>
+				</div>
+			{% endif %}
+		</div>
+		<div class="medium-1 columns text-right">{{form.referencia.label_tag}}</div>
+		<div class="medium-4 columns end">
+			<span data-tooltip class="has-tip" title="Hace referencia a una anotacion anterior, la cual se relaciona con algo descrito en la nota que estas creando">
+				{{form.referencia}} 
+			</span>
+		</div>	
+	</div>
+	
+	<div class="row">
+		<div class="medium-1 columns text-right">{{form.adjuntos.label_tag}}</div>
+		<div class="medium-4 columns ">
+			<span data-tooltip class="" title="Adjunta un archivo que creas que es realmente necesario, en caso de querer agregar mas de uno, comprimelos en un solo para poder subirlo">
+				{{form.adjuntos}} 
+			</span>
+		</div>
+		<div class="medium-1 columns text-right">
+			<span data-tooltip class="" title="palabras delimitadas por coma, serviran para realizar busquedas rapidas">
+				{{form.keywords.label_tag}}
+			</span>		
+		</div>
+		<div class="medium-4 columns end">	
+			{{form.keywords}}
+		</div>
+	</div>
+	<div class="row">
+		 <div class="medium-1 columns text-right">{{form.systems.label_tag}}</div>
+		<div class="medium-8 columns end">
+			<select name="sistemas_cbox" id="sistemas_cbox" multiple>
+				{% for sistema in sistemas %}
+					<option value="{{sistema.pk}}">{{sistema.short_name}}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div><br>
+	<div class="row">
+		<div class="medium-1 columns text-right">{{form.description.label_tag}}</div>
+		<div class="medium-8 columns ">
+			{% if form.description.errors %}
+				<div data-alert class="alert-box warning radius">
+					Es necesario que especifiques el contenido de la nota
+					 <a href="#" class="close">&times;</a>
+				</div>
+			{% endif %}
+			{{form.description}}
+		</div>
+		<div class="medium-3 columns ">
+			<button class="button small " data-hint="Seguidos" type="submit">
+			  <i class="fi-save"></i> Guardar
+			</button>
+
+		</div>
+	</div>
+
+	<select name="systems" id="id_systems" multiple hidden>
+				{% for sistema in sistemas %}
+					<option value="{{sistema.pk}}">{{sistema.short_name}}</option>
+				{% endfor %}
+	</select>
+</form>
+
+
+{% endblock main_content %}

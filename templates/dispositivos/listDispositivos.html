@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block statics %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.dynatable.css">
+	<script src='{{STATIC_URL}}js/vendor/jquery.dynatable.js'></script>
+	<script>
+		$(function() {
+			$('#mitabla').dynatable({
+				features: {
+				    paginate: true,
+				    sort: true,
+				    pushState: true,
+				    search: true,
+				    recordCount: true,
+				    perPageSelect: false
+				  },
+				  inputs: {
+				    paginationPrev: 'Anterior',
+				    paginationNext: 'Siguiente',
+				    recordCountText: 'Mostrando ',
+				    processingText: 'Processing...'
+				  },
+				   params: {
+				    records: 'registros',
+				  }
+				});
+	
+		});
+	</script>
+
+
+{% endblock statics %}
+
+
+{% block main_content %}
+{% load i18n %} 
+
+{% if  devices %}	
+
+<table id='mitabla' class="table table-bordered">
+  <thead>
+    <tr>
+      <th width="150px">No Serie</th>
+      <th width="150px">Nombre</th>
+      <th width="150px">Tipo</th>       
+      <th width="150px">Marca </th> 
+      <th width="150px">Modelo </th> 
+      <th width="150px">Sistema </th>    
+    </tr>
+  </thead>
+  <tbody>   
+
+	{% for device in  devices %}
+		<tr>
+		  <td> <a href="{% url 'detalle_dispositivo' device.pk %}"><i class='fi-page-search'> {{device.serie}} </i></a></td>
+	      <td> {{device.nombre}} </td>
+	      <td>{{device.tipo.nombre}} </td>
+	      <td>{{device.marca}} </td>	
+	      <td>{{device.modelo}} </td>	
+	      <td>
+	      	{{device.os}} <br>
+	      	{% if device.os != "OTRO" and device.os != "N/A" %}
+				<a class="th radius" href="../img/demos/demo2.png">
+					<img src="{{MEDIA_URL}}dispositivos/dispositivo/{{device.os}}.png" style='width: 35px' alt="">
+				</a>
+			{% endif %}
+	      </td>
+	    </tr>	
+	{% endfor %}
+  </tbody>
+</table>
+{% else %}
+	<h6>No hay elementos que mostrar</h6>
+{% endif %}
+{% endblock main_content %}
