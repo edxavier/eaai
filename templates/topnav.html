@@ -22,7 +22,7 @@
 				<li class=""><a href="http://192.168.137.200:8080"> <i class="fi- "></i> Version Anterior </a></li>
 				{% if  user.is_authenticated %}	
 					<li class="has-dropdown sn">
-						<a href="{% url 'list_notas' %}" > <i class="fi-burst-new"></i> Equipos</a>
+						<a> <i class="fi-burst-new"></i> Equipos</a>
 						<ul class="dropdown show-for-large-down">
 							<li ><a href="{% url 'list_dispositivos' %}"><i class='fi-list'></i> Listar</a></li>
 							<li ><a href="{% url 'search_notas' %}"><i class='fi-widget'></i> Componentes</a></li>
@@ -31,7 +31,7 @@
 					<li class="sn"><a href="{% url 'list_categorias' %}"><i class=" "></i> Categorias</a></li>
 					<li class="sn"><a href="{% url 'list_sistemas' %}"><i class="fi-monitor "></i> Sistemas</a></li>
 					<li class="has-dropdown sn">
-						<a href="{% url 'list_notas' %}" > <i class="fi-book"></i>  Bitacora</a>
+						<a> <i class="fi-book"></i>  Bitacora</a>
 						<ul class="dropdown show-for-large-down">
 							<li ><a href="{% url 'new_nota' %}"><i class='fi-plus'></i> Agregar Nota</a></li>
 							<li ><a href="{% url 'search_notas' %}"><i class='fi-magnifying-glass'></i> Busqueda</a></li>

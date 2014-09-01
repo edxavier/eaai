@@ -28,6 +28,10 @@ class CategoryViewSet(viewsets.ModelViewSet):
 	queryset= Categoria.objects.all()
 	serializer_class= CategorySerializer
 
+class GetTemplate(TemplateView):
+	def get(self, request,Thetemplate): 
+		Thetemplate+=".html"
+		return render_to_response('bitacora/'+Thetemplate, locals(),context_instance=RequestContext(request))
 
 class ListarNotas(ListView):
 	def get(self, request):

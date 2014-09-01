@@ -1,22 +1,10 @@
-{% extends "base.html" %}
+
+	{% extends "base.html" %}
 
 {% block main_content %}
-	
-Detalle de {{nota}}
-<section>		
-	<dl class="sub-nav ">
-		<dt>Opciones:</dt>
-			<dd class="sn "><a href="{% url 'list_notas' %}">
-				<i class='fi-list-bullet'></i> Todas</a>
-			</dd>
-			<dd class="sn "><a href="{% url 'new_nota' %}">
-				<i class='fi-plus'></i> Crear nota</a>
-			</dd>
-			<dd class="sn "><a href="{% url 'search_notas' %}">
-				<i class='fi-magnifying-glass'></i> Busqueda</a>
-			</dd>
-	</dl>	
 
+Detalle de {{nota}}
+<section id="detail_section">
 			<article id='{{nota.pk}}'>
 				<div class="row">
 					<div class="medium-2 columns text-center autor">
@@ -74,5 +62,7 @@ Detalle de {{nota}}
 			</article>		
 
 </section>
+{% endblock main_content %}	
+{% comment %}
 
-{% endblock main_content %}
+{% endcomment %}

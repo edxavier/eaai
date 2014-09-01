@@ -2,6 +2,8 @@
 
 
 {% block statics %}
+<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css">
+<script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
 <script>
 	$(document).ready(function() {
 		$("article").hover(function() {
@@ -12,6 +14,38 @@
 			$(this).css('box-shadow', ' 2px 2px 10px #102648');
 //			$(this).animate({ 'zoom': 1 }, 100);
 		});
+
+
+		$(".det").click(function(event) {
+			/* Act on the event */
+			id=event.target.id;
+			event.preventDefault()
+			$( "#dialog-message" ).load( "/bitacora/notas/"+id+" #detail_section", function() {
+				$( "#dialog-message" ).dialog( "option", "title", "Detalles de la nota: "+id );
+			  	$( "#dialog-message" ).dialog( "open" );
+			});
+		});
+
+		$( "#dialog-message" ).dialog({
+	      modal: true,
+	      autoOpen:false,
+	      maxHeight: 600,
+	      width: "90%",
+	      position: { my: "center top", at: "center top", of: window },
+	      show: {
+	        effect: "clip",
+	        duration: 1000
+	      },
+	      hide: {
+	        effect: "slide",
+	        duration: 1000
+	      },
+	      buttons: {
+	        Ok: function() {
+	          $( this ).dialog( "close" );
+	        }
+	      }
+	    });
 
 	});
 </script>
@@ -64,7 +98,7 @@
 <section>
 	{% load tz %}
 		{% for  nota in notas %}
-			<article id='{{nota.pk}}'>
+			<article >
 				<div class="row">
 					<div class="medium-2 columns text-center autor">
 						<img src="{{MEDIA_URL}}{{nota.user.perfil.foto}}" alt="">
@@ -104,7 +138,7 @@
 						</div>
 						<div class="clearfix tags">
 							<label class='left'><i class='fi-clock'></i> Hace {{nota.created_at|timesince}}</label>
-							<label class="right"><a href="{% url 'detail_nota' nota.pk %}"> <i class='fi-zoom-in'></i> Ver detalles</a></label>
+							<label class="right"><a href="{% url 'detail_nota' nota.pk %}" class='det' id='{{nota.pk}}'> <i class='fi-zoom-in'></i> Ver detalles</a></label>
 						</div>
 					</div>
 				</div>
@@ -115,4 +149,16 @@
 		{% endfor %}			
 
 </section>
+
+<div class="row">
+<div id="dialog-message" title="Detalles de nota">
+  <p>
+    <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+    Your files have downloaded successfully into the My Downloads folder.
+  </p>
+  <p>
+    Currently using <b>36% of your storage space</b>.
+  </p>
+</div>
+</div>
 {% endblock main_content %}

@@ -11,8 +11,24 @@
 			tinymce.init({
 			    selector: "textarea",
 			    language : 'es',
-			    browser_spellcheck : true 
+			    browser_spellcheck : true ,
+			    plugins: "charmap textcolor emoticons advlist link searchreplace table directionality template bbcode print lists",
+			    toolbar: "undo redo link searchreplace forecolor backcolor inserttable template styleselect bold italic image alignleft aligncenter alignright bullist numlist",
+			    templates : [
+			        {
+			            title: "Entrega de Turno T1",
+			            url: "/bitacora/T1tmpl",
+			            description: "Entrega de turno T1"
+			        },
+			        {
+			            title: "Timestamp",
+			            //url: "time.htm",
+			            description: "Adds an editing timestamp."
+			        }
+			    ]	
 			 });
+
+
 			 $("#id_severity").select2({
 			 	  width: "resolve"
 			 }); 
@@ -20,13 +36,10 @@
 			 $("#id_referencia").select2({
 			 	  width: "resolve"
 			 }); 
-
-
 			 $("#sistemas_cbox").select2({
 			 	  width: "resolve",
 			 	  placeholder:"Seleccione los sistemas relacionados a la nota"
 			 }); 
-
 			 $("#sistemas_cbox").on("select2-selecting",function(event) {
 			 	valor = event.val
 			 	$('#id_systems option[value='+valor+']').attr('selected','selected');

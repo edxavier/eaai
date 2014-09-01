@@ -78,7 +78,7 @@ setInterval(getWeather, 600000);
 {% load user_filter %}
 {% load tz %}
 	<label class='label'>Proximos Cumpleañeros</label>	<br> <br>
-	{% for usuario in  usuarios %}
+	{% for usuario in  usuarios  %}
 		{% if forloop.counter0 <= 5 and usuario.perfil.fecha_nacimiento  %}
 				{% if  usuario.first_name %}
 					<label class='label secondary radius'>{{usuario.first_name }} {{usuario.last_name |truncatewords:1}}</label>

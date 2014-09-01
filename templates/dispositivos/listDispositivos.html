@@ -43,7 +43,7 @@
       <th width="150px">No Serie</th>
       <th width="150px">Nombre</th>
       <th width="150px">Tipo</th>       
-      <th width="150px">Marca </th> 
+      <th width="150px">Estado </th> 
       <th width="150px">Modelo </th> 
       <th width="150px">Sistema </th>    
     </tr>
@@ -55,13 +55,19 @@
 		  <td> <a href="{% url 'detalle_dispositivo' device.pk %}"><i class='fi-page-search'> {{device.serie}} </i></a></td>
 	      <td> {{device.nombre}} </td>
 	      <td>{{device.tipo.nombre}} </td>
-	      <td>{{device.marca}} </td>	
+	      <td>
+	      		{% if device.operando %}
+					<img src="{{STATIC_URL}}img/ok.png" style='width: 24px' alt="">
+				{% else %}
+					<img src="{{STATIC_URL}}img/error.png" style='width: 24px' alt="">
+				{% endif %} 
+	      </td>	
 	      <td>{{device.modelo}} </td>	
 	      <td>
 	      	{{device.os}} <br>
 	      	{% if device.os != "OTRO" and device.os != "N/A" %}
 				<a class="th radius" href="../img/demos/demo2.png">
-					<img src="{{MEDIA_URL}}dispositivos/dispositivo/{{device.os}}.png" style='width: 35px' alt="">
+					<img src="{{MEDIA_URL}}dispositivos/dispositivo/{{device.os}}.png" style='width: 30px' alt="">
 				</a>
 			{% endif %}
 	      </td>

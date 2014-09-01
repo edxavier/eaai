@@ -59,7 +59,7 @@ class Dispositivo(models.Model):
     descripcion = models.TextField('Descripcion',max_length=160, help_text='Descripcion del dispositivo',blank=True,default="S/E")
     ubicacion= models.ForeignKey(Ubicacion)
     tipo=models.ForeignKey(Tipo_Dispositivo)
-    operando = models.BooleanField("En funcionemiento",default=True)
+    operando = models.BooleanField("En Buen Estado",default=True)
     activo= models.BooleanField("Activo",default=True)
     creado = models.DateTimeField(auto_now_add=True,verbose_name='creado')
     actualizado = models.DateTimeField(auto_now=True,verbose_name='actualizado')

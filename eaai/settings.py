@@ -22,9 +22,7 @@ DATABASES = {
         #'PASSWORD': 'stecnica',
         'USER': 'root',
         'PASSWORD': 'root',
-        #'HOST': '192.168.137.200',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'HOST': '',
-        'PORT': '',                      # Set to empty string for default.
+        #'HOST': '192.168.137.200',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.                   # Set to empty string for default.
     }
 }
 

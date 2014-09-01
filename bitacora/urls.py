@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^notas/por-categoria/(\d+)/$',  login_required(FiltrarNotas_x_Categoria.as_view()), name='filter_notas'),
     url(r'^notas/(\d+)/$',  login_required(DetalleNota.as_view()), name='detail_nota'),
     url(r'^notas/nueva/$',  login_required(NuevaNota.as_view()), name='new_nota'),
+    url(r'^([-\w]+)/$',  login_required(GetTemplate.as_view()), name='template'),
     url(r'^notas/busqueda/$',  login_required(BusquedaAvanzada.as_view()), name='search_notas'),
   
     # url(r'^eaai/', include('eaai.foo.urls')),
