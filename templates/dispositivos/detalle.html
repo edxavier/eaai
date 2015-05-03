@@ -9,6 +9,32 @@
 		  $(function() {
 		    $( "#accordion" ).accordion();
 		    $( "#tabs" ).tabs();
+		    $(".det").click(function(event) {
+				event.preventDefault()
+				id=event.target.id;
+				  	$( "#detalle_" + id).dialog( "open" );
+			});
+			$( ".detalleH" ).dialog({
+			      modal: true,
+			      autoOpen:false,
+			      maxHeight: 600,
+			      width: "90%",
+			      position: { my: "center top", at: "center top", of: window },
+			      show: {
+			        effect: "clip",
+			        duration: 1000
+			      },
+			      hide: {
+			        effect: "slide",
+			        duration: 1000
+			      },
+			      buttons: {
+			        Ok: function() {
+			          $( this ).dialog( "close" );
+			        }
+			      }
+			    });	
+		   
 		  });
   	</script>
 {% endblock statics %}
@@ -17,7 +43,7 @@
 
 	<div class="row">
 		<div class="columns medium-2 text-center">
-			 <label>{{device.tipo.nombre}}</label>
+			 <label><strong>{{device.tipo.nombre}}</strong></label>
 			<a class="th radius" href="../img/demos/demo2.png">
 				<img src="{{MEDIA_URL}}{{device.tipo.imagen}}" style='width: 80px' alt="">
 			</a>
@@ -30,15 +56,16 @@
 			<label style='font-weight: bold'>Direccion IP: </label> 
 			<label style='font-weight: bold'>Mascara de red: </label> 
 		</div>
-		<div class="columns medium-1">	
-			<label> {{device.os}}</label> 
-			<label> {{device.marca}}</label> 		
-			<label> {{device.modelo}}</label> 
-			<label> {{device.serie}}</label> 
-			<label> {{device.ip}}</label> 
-			<label> {{device.mascara_red}}</label> 
+		<div class="columns medium-2">	
+			<label class='arsenal'> {{device.os}}</label> 
+			<label class='arsenal'> {{device.marca}}</label> 		
+			<label class='arsenal'> {{device.modelo}}</label> 
+			<label class='arsenal'> {{device.serie}}</label> 
+			<label class='arsenal'> {{device.ip}}</label> 
+			<label class='arsenal'> {{device.mascara_red}}</label> 
 		</div>
 		<div class="columns medium-2 text-right">			
+			<label style='font-weight: bold'> Inventario:</label> 
 			<label style='font-weight: bold'> Ubicacion:</label> 
 			<label style='font-weight: bold'>Estado:</label> 
 			<label style='font-weight: bold'>Creado el: </label> 
@@ -46,56 +73,150 @@
 			<label style='font-weight: bold'>Creado por: </label> 
 		</div>
 		<div class="columns medium-3 end">	
-			<label> {{device.ubicacion.name}}</label> 
-			<label>				
-				{% if device.operando %}
-					<img src="{{STATIC_URL}}img/ok.png" style='width: 24px' alt="">
+			<label class='arsenal'> {{device.inventario}}</label> 
+			<label class='arsenal'> {{device.ubicacion}}</label> 
+			<label class='arsenal'>				
+				{% if device.estado == "FUNCIONAL" %}
+					<img src="{{STATIC_URL}}img/ok.png" style='width: 25px' alt="">
+				{% elif device.estado == "FALLO" %}
+					<img src="{{STATIC_URL}}img/error.png" style='width: 25px' alt="">
 				{% else %}
-					<img src="{{STATIC_URL}}img/error.png" style='width: 24px' alt="">
+						<img src="{{STATIC_URL}}img/warning.png" style='width: 25px' alt="">
 				{% endif %} 
-				{{device.operando |yesno:"Operando,Mal Estado,No Especificado" }}
+				{{device.estado  }}
 			</label> 		
-			<label> {{device.creado}}</label> 
-			<label> {{device.actualizado}}</label> 
-			<label> {{device.usuario.username}}</label> 
+			<label class='arsenal'> {{device.creado}}</label> 
+			<label class='arsenal'> {{device.actualizado}}</label> 
+			<label class='arsenal'> {{device.usuario.username}}</label> 
 		</div>
 	</div>
 <div class="row">
 	<div class="columns medium-12 ">
 		<div id="tabs">
 			  <ul>
-			    <li><a href="#tabs-1">Descripcion</a></li>
-			    <li><a href="#tabs-2">Servicios</a></li>
-			    <li><a href="#tabs-3">Componentes</a></li>
+			    <li class='basic'><a href="#tabs-1">Historial</a></li>
+			    <li class='basic'><a href="#tabs-2">Componentes</a></li>
+			    <li class='basic'><a href="#tabs-3">Descripcion</a></li>
 			  </ul>
 			  <div id="tabs-1">
-			    <p>
-			    	{{device.descripcion}}
-			    </p>
+
+				<a href="{% url 'nuevo_historial' device.id %}" style="font-size: 12px;color:white" class="button small radius ">
+				  <i class="fi-plus"></i> Agregar Historial
+				</a>
+			   	
+			   		{% if  device.historial_equipo_set.all.count > 0 %}	
+
+					<table id='mitabla' class="table table-bordered">
+						<caption class='subtitle'>Historial del dispositivo</caption>
+					  <thead>
+					    <tr class='basic'>
+					      <th width="140px">Entrada por</th>
+					      <th width="140px">Estado inicial</th>
+					      <th width="150px">Estado final</th>       
+					      <th width="160px">Ubicacion inicial</th> 
+					      <th width="150px">Ubicacion final</th> 
+					      <th width="120px">Usuario </th> 
+					      <th width="150px">Fecha </th> 
+					      <th width="120px">Opcion </th>     
+					    </tr>
+					  </thead>
+					  <tbody>   
+
+								{% for history in   device.historial_equipo_set.all %}
+									<tr class='arsenal'>
+								      <td> {{history.tipo_entrada}}</td>
+								      <td>
+								      		{% if history.estado_antes == "FUNCIONAL" %}
+												<img src="{{STATIC_URL}}img/ok.png" style='width: 34px' alt="">
+											{% elif history.estado_antes == "FALLO" %}
+												<img src="{{STATIC_URL}}img/error.png" style='width: 34px' alt="">
+											{% else %}
+													<img src="{{STATIC_URL}}img/warning.png" style='width: 34px' alt="">
+											{% endif %} 
+								      </td>	
+								      <td>
+								      		{% if history.estado_despues == "FUNCIONAL" %}
+												<img src="{{STATIC_URL}}img/ok.png" style='width: 34px' alt="">
+											{% elif history.estado_despues == "FALLO" %}
+												<img src="{{STATIC_URL}}img/error.png" style='width: 34px' alt="">
+											{% else %}
+													<img src="{{STATIC_URL}}img/warning.png" style='width: 34px' alt="">
+											{% endif %} 
+								      </td>	
+								      <td>{{history.ubicacion_antes}} </td>
+								      <td>{{history.ubicacion_despues}} </td>	
+								      <td>
+								      	{{history.usuario}} 
+								      </td>
+								      <td>
+								      	{{history.creado |  date:"D, d-b-y "}} 
+								      </td>
+								      
+								      <td>
+								      	<label><a class='det' href="#" id='{{history.pk}}'> <i class='fi-zoom-in'></i> Ver</a></label>
+								      		
+
+											<div id="detalle_{{history.pk}}" title="Detalles" class="detalleH">
+												<label class='arsenal'><strong>Tareas relizadas </strong></label>
+								        	 	{{history.descripcion | safe}}
+											</div>
+
+								      		
+								      </td>
+								      
+								    </tr>	
+								{% endfor %}
+							  </tbody>
+							</table>
+							{% else %}
+								<h6 class='arsenal'>No existen entradas en el historial</h6>
+							{% endif %}
+			    
 			  </div>
 			  <div id="tabs-2">
 			    <p>
-			    	{% for component in  components %}			    		
-			    			<label>{{component}}<label>
-			    	{%empty%}
-			    		No existen componentes asociados
-			    	{% endfor %}
+			    	
+			    	{% if  components.count > 0 %}	
+
+					<table id='mitabla' class="table table-bordered">
+					  <thead>
+					    <tr>
+					      <th width="160px">Tipo</th> 
+					      <th width="150px">Serie</th>
+					      <th width="150px">Marca</th>
+					      <th width="150px">Modelo</th>       
+					      <th width="100px">Estado</th>  
+					      <th width="180px">Descripcion</th>  
+					    </tr>
+					  </thead>
+					  <tbody>   
+
+								{% for component in  components %}
+									<tr>
+									  <td> {{component.tipo}}</td>
+								      <td> {{component.serie}}</td>
+								      <td> {{component.marca}}</td>
+								      <td> {{component.modelo}}</td>								      
+								      <td> {{component.operando|yesno:"OK,Falla"}}</td>
+								  		<td> {{component.descripcion}}</td>	
+								    </tr>	
+								{% endfor %}
+							  </tbody>
+							</table>
+							{% else %}
+								<h6 class='arsenal'>No existen componentes asociados</h6>
+							{% endif %}
+			    	
 			    </p>
 			  </div>
 			  <div id="tabs-3">
-			    <p>
-			    	{% for component in  components %}
-			    		{{component}}
-			    	{%empty%}
-			    		No existen componentes asociados
-			    	{% endfor %}
-			    </p>
+			  	
+			    <label class='arsenal'>{{device.descripcion}}</label>	
+			    
 			  </div>
 		</div>
 	</div>
 </div>
-
-
 
 
 {% endblock main_content %}

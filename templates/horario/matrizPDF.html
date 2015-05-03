@@ -1,0 +1,48 @@
+
+<html>
+<head>
+	<link rel="stylesheet" href="/static/css/myUI.css">
+	<style>
+		
+	</style>
+</head>
+<body>
+	
+	<div class="Panel">
+		<div class="cabecera rojo">Matriz de turnos </div>
+		<div class="">
+			<br>
+				<table class='table'>
+				   <caption class='caption'></caption>
+				   <thead>
+				      <tr class='head'  style='padding: 3px; margin: 3px'>
+				      		<th style='width: 50px;' class='cabecera celeste'>Num</th>
+				         	<th style='width: 110px;' class='cabecera celeste'>Lunes</th>
+				        	<th style='width: 110px;' class='cabecera celeste'>Martes</th>
+				         	<th style='width: 110px;' class='cabecera celeste'>Miercoles</th>
+				         	<th style='width: 110px;' class='cabecera celeste'>Jueves</th>
+				         	<th style='width: 110px;' class='cabecera celeste'>Viernes</th>
+				         	<th style='width: 110px;' class='cabecera celeste'>Sabado</th>
+				         	<th style='width: 110px;'class='cabecera celeste'>Domingo</th>	         
+				      </tr>
+				   </thead>
+				   <tbody>
+
+				   		
+							{% for rol in  matriz%}
+								<tr style='border-bottom: 1px solid blue; padding: 3px'>
+									<td style='width: 110px;text-align: center'>{{forloop.counter}}</td>
+									{% for turno in  rol.rol%}
+										<td style='width: 110px;text-align: center'>{{turno}}</td>
+									{% endfor %}
+								</tr>
+							{% endfor %}
+						 
+				   </tbody>
+				</table>
+		</div>
+	</div>
+
+
+</body>
+</html>

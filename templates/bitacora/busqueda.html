@@ -5,13 +5,27 @@
 <link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css">
 	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.datetimepicker.css">
 	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.flipcountdown.css">
-	
-	<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
-	<script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
-	<script src='{{STATIC_URL}}js/vendor/jquery.datetimepicker.js'></script>
+
+<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
+<script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
+<script src='{{STATIC_URL}}js/vendor/jquery.datetimepicker.js'></script>
+
+<!-- JqWidgets styles -->
+<link rel="stylesheet" href="{{STATIC_URL}}js/jqwidgets/styles/jqx.base.css">
+<link rel="stylesheet" href="{{STATIC_URL}}js/jqwidgets/styles/jqx.bootstrap.css">
+<!-- Jqwidget -->
+<script src="{{STATIC_URL}}js/jqwidgets/jqxcore.js" type="text/javascript"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jqwidgets/jqxdatetimeinput.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jqwidgets/jqxcalendar.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jqwidgets/jqxtooltip.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jqwidgets/globalization/globalize.js"></script>
 
 <script>
 	$(document).ready(function() {
+		$("#fecha_inicial,#fecha_final").jqxDateTimeInput({
+			width: '120px', height: '25px'
+		});
+
 
 		$("#id_fecha_inicio").datetimepicker({
 	   		lang:'es',
@@ -42,7 +56,7 @@
 
 {% block left_content %}
 <br>
-
+<!-- 
 <h5  class="subheader">Categorias</h5 >
 		<ul class="side-nav">
 		{% for categoria in categorias %}
@@ -53,6 +67,7 @@
 			</li>
 		{% endfor %}
 		</ul>
+ -->
 {% endblock left_content %}
 
 
@@ -69,7 +84,10 @@
 			</dd>
 	</dl>
 
-
+<div id='fecha_inicial'>
+</div>
+<div id='fecha_final'>
+</div>
 
 <form method="POST">
 	{% csrf_token %}

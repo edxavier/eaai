@@ -39,8 +39,8 @@
 			<li>
 				<div class="panel" data-equalizer-watch>				
 					
-					<h5 class="txtlineBottonBluenice"> {{ sistema.short_name }} </h5>
-					<small >{{sistema.description}}</small><br>			
+					<h5 class="txtlineBottonBluenice subtitle2"> {{ sistema.short_name }} </h5>
+					<small class=''>{{sistema.description}}</small><br>			
 					<a href="{% url 'detail_sistema' sistema.pk %}" class="button tiny">Ver detalles</a>	
 				</div>
 			</li>
@@ -54,19 +54,19 @@
 		</div>
 		<div class="medium-10 column">			
 				<div class="panel radius">	
-					<h5 class="txtlineBottonBluenice"> {{ sistema.name }} ( {{sistema.short_name}} )</h5>
-					<p >{{sistema.description}}</p>
+					<h5 class="txtlineBottonBluenice subtitle2"> {{ sistema.name }} ( {{sistema.short_name}} )</h5>
+					<p class='arsenal'>{{sistema.description}}</p>
 					<div class="row">
 						<div class="small-5 medium-2 column text-right">
-							<label>Tipo de sistema: </label>
-							<label>Estado: </label>
-							<label>Categoria: </label>
-							<label>Ubicacion: </label>
-							<label>Creado Por: </label>
-							<label>Creado el: </label>
+							<label class='basic'>Tipo de sistema: </label>
+							<label class='basic'>Estado: </label>
+							<label class='basic'>Categoria: </label>
+							<label class='basic'>Ubicacion: </label>
+							<label class='basic'>Creado Por: </label>
+							<label class='basic'>Creado el: </label>
 						</div>
 						<div class="small-5 medium-5 column end">
-							<label>
+							<label class='arsenal'>
 								{% if sistema.sys_type == "SW" %} Software {% else %}Hardware{% endif %}  <br>
 								{% if sistema.en_funcionamiento %}En funcionamiento {% else %}Fuera de Servicio{% endif %} <br>
 								{{sistema.category.name}} <br>

@@ -30,9 +30,9 @@ class SeverityAdmin (admin.ModelAdmin):
 
 
 class NotaAdmin (admin.ModelAdmin):
-    list_display=('id','creado_por','created_at', 'updated_at','sistemas_involucrados',)
-    #list_filter=('user__username',)
-    search_fields=('user__username','keywords')
+    list_display=('id','creado_por','created_at', 'updated_at',)
+    list_filter=('user__username','created_at','systems')
+    search_fields=('user__username','keywords','user__first_name','description')
     list_per_page = 10
     filter_horizontal= ('systems',)
     ordering = ['-created_at']

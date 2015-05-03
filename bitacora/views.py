@@ -63,6 +63,7 @@ class NuevaNota(FormView):
 		form= NotaForm2(request.POST,request.FILES)
 		if form.is_valid():
 			nota=form.save(commit=False)
+			print nota.description
 			nota.user=request.user
 			nota.save()
 			form.save_m2m()
@@ -87,13 +88,18 @@ class FiltrarNotas_x_Categoria(TemplateView):
 		#notas= Nota.objects.filter(systems_category_name=cat.name)
 		return render_to_response('bitacora/notas.html', locals(),context_instance=RequestContext(request))
 
+import os
 class DetalleNota(TemplateView):
 	def get(self, request,idNota): 
 		page_title = 'Bitacora'
 		nota= get_object_or_404(Nota, pk=idNota)
-		page_sub_title= 'Detalles de nota  %d' %(nota.pk)
+		page_sub_title = 'Detalles de nota  %d' %(nota.pk)
 		#obtener todos los sistemas que estan en la nota
 		sistemas = Sistema.objects.filter(nota__pk=nota.pk)
+		#obtener la extension del al archivo adjunto
+		if nota.adjuntos:
+			filetype = os.path.splitext(nota.adjuntos.__str__())[1]
+
 		return render_to_response('bitacora/detalleNota.html', locals(),context_instance=RequestContext(request))
 
 class BusquedaAvanzada(TemplateView):
@@ -116,3 +122,42 @@ class BusquedaAvanzada(TemplateView):
 			notas= Nota.objects.filter(created_at__range=[inicio,fin]).distinct()[:100]
 		
 		return render_to_response('bitacora/busqueda.html', locals(),context_instance=RequestContext(request))
+
+
+
+
+import json
+
+class Estadistica_Notas(TemplateView):
+    def get(self, request,*args,**kwargs):
+    	stats=Nota.estadisticas.status_Count()
+    	dataset=[]
+    	recordsDict={}
+    	for stat in stats:
+    		dic={'label':stat.severity.name,'value':stat.total}
+    		dataset.append(dic)
+
+    	recordsDict["estadisticas"]=dataset
+    	return HttpResponse(json.dumps(dataset,  indent=4),mimetype='application/json') 
+        #return HttpResponse(data,mimetype='application/json') 
+
+class Estadistica_Sistemas(TemplateView):
+    def get(self, request,*args,**kwargs):
+    	stats=Nota.estadisticas.sist_statistics(0)
+    	dataset=[]
+    	for stat in stats:
+    		if stat["total"] > 0:
+    			dataset.append(stat)
+        return HttpResponse(json.dumps(dataset,  indent=4),mimetype='application/json') 
+
+
+class Estadistica_NotasXUsuario(TemplateView):
+    def get(self, request,*args,**kwargs):
+    	stats=Nota.estadisticas.Notas_por_Usuario_Count()
+    	dataset=[]
+    	for stat in stats:
+    		if stat["total"] > 0:
+    			dataset.append(stat)
+        return HttpResponse(json.dumps(dataset,  indent=4),mimetype='application/json') 
+
+        #return HttpResponse(data,mimetype='application/json') 

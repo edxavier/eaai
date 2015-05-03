@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+
+
+	
+	<div class="Panel">
+		<div class="cabecera rojo">Generador de Horario </div>
+		<div class="contenido">
+			{% if perms.usuario.rotate_horario %}
+					
+					{% if daysDiff.days <= 0 %}
+						
+						<form method='POST'>
+							{% csrf_token %}
+							<div class="row">
+								<div class="column medium-4">						
+										<label for="">De cuantas semanas consta el siguinete horario:</label>
+										<input type="number" name="quantity" min="4" max="5" required > 
+										<button class="button small " data-hint="Seguidos" type="submit">
+										  <i class="fi-save"></i> Guardar
+										</button>
+								</div>
+								<div class="column medium-6">
+									<label for="">Calendario:</label>
+									<div id="calendar"></div>					
+								</div>
+							</div>
+						</form>
+					{% else %}
+						<div class="row">
+							<div class="column medium-9">
+								<h4  style='font-family: Jose'>
+								Estimado(a) {{user.first_name | default:user}}, lo sentimos, esta opcion estara disponible en: <i class='fi-clock'></i> {{fechaDisp |timeuntil}} ( {{daysDiff.days}} dias)  <br>
+								<i class='fi-calendar'></i> El {{fechaDisp | date:"d-F-Y"}}
+							</h4>
+							</div>
+							<div class="column medium-3">
+								<img src="{{STATIC_URL}}img/female.png" style='width:200px'>
+							</div>
+						</div>
+
+					{% endif %}
+			{% else %}
+				Al parecer no tienes permisos sobre esta seccion.
+				<img src="{{STATIC_URL}}img/female.png" style='width:200px'>
+			{% endif %}	
+
+		</div>
+	</div>
+	<br>
+
+{% endblock main_content %}
+
+
+{% block statics %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css">
+	<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
+
+	<script>
+	  $(function() {
+
+	    $( "#calendar" ).datepicker();
+
+	  });
+	</script>
+
+
+{% endblock statics %}

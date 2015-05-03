@@ -16,6 +16,8 @@ from django.contrib.auth.forms import PasswordChangeForm
     #return HttpResponse("<h2>HOME</h2>")
 #   return render_to_response('index.html', context_instance=RequestContext(request))
 
+
+
 class perfil(TemplateView):
     @method_decorator(login_required)
     def get(self, request):     

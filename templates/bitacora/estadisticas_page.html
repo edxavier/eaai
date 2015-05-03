@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+
+{% block statics %}
+<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
+<!-- hight Charts -->
+<script src="{{STATIC_URL}}js/high_charts/highcharts.js"></script>
+<script src="{{STATIC_URL}}js/high_charts/modules/exporting.js"></script>
+
+
+<script>
+
+$(function(){
+	// Radialize the colors
+	function radializeColors(){
+		Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+			        return {
+			            radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
+			            stops: [
+			                [0, color],
+			                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+			            ]
+			        };
+		});
+	}
+	function draw_pie(target,title,name,serie,colors){
+		// Build the chart
+		$(target).highcharts({
+		        chart: {
+		            plotBackgroundColor: null,
+		            plotBorderWidth: null,
+		            plotShadow: false
+		        },
+		        title: {
+		            text: title
+		        },
+		        color:colors,
+		        tooltip: {
+		            pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.y})</b>'
+		        },
+		        plotOptions: {
+		            pie: {
+		                allowPointSelect: true,
+		                cursor: 'pointer',
+		                dataLabels: {
+		                    enabled: true,
+		                    format: '<b>{point.name}</b>: {point.percentage:.1f} % ',
+		                    style: {
+		                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+		                    },
+		                    connectorColor: 'silver'
+		                },
+		                showInLegend: true
+		            }
+		         
+		        },
+		        series: [{
+		            type: 'pie',
+		            name: name,
+		            data: serie
+		        }]
+		});
+	}
+
+    $.ajax({
+        url: '/bitacora/estadisticas/sistemas',
+        type: 'get',
+        dataType: 'json',
+        success: function(data) {
+			serie = []
+			for(i=0;i<data.length;i++)
+			{
+				serie.push([data[i].systems__short_name,data[i].total])
+			}
+        	//HightChart
+        	radializeColors()
+        	draw_pie('#container','Estadistica de anotaciones  por sistemas','Notas en bitacora',serie )
+        }
+    })
+    $.ajax({
+		url: '/bitacora/estadisticas/',
+		type: 'get',
+		dataType: 'json',
+		 success: function(data) {
+	        serie = []
+	        colores=[]
+			for(i=0;i<data.length;i++)
+			{
+				serie.push([data[i].label,data[i].value])
+				if (data[i].label === 'Normal') {
+			      colores.push('#4d9221')
+			    }
+			    else if (data[i].label === 'Trabajos') {
+			      colores.push('#444')
+			    }
+			    else if (data[i].label === 'Informacional') {
+			      colores.push('#0084EE')
+			    }
+			    else if (data[i].label === 'Incidencia Menor') {
+			      colores.push('#faa818')
+			    }
+			    else if (data[i].label === 'Incidencia Media') {
+			      colores.push('#cf5f3b')
+			    }
+			    else {
+			      colores.push('#cc0000')
+			    }
+			}
+			Highcharts.setOptions({
+		        colors: colores
+		    });
+		    radializeColors()
+	        draw_pie('#container2','Estadistica de anotaciones por incidencia','Notas',serie)
+	    }
+	})
+    $.ajax({
+		url: '/bitacora/estadisticas/usuario',
+		type: 'get',
+		dataType: 'json',
+		success: function(data) {
+		 	serie = []
+			for(i=0;i<data.length;i++)
+			{
+				serie.push([data[i].user__username,data[i].total])
+			}   
+			Highcharts.setOptions({
+		        colors: [ '#0084EE',  '#cc0000','#ED561B', '#DDDF00',  '#64E572', '#24CBE5','#FA6900', '#fa482e', '#00778a','#00b6af','#058DC7', '#50B432', '#8e0152', '#551177', '#ff0077', '#ff6666', '#7f7f7f','#FF9655', '#FFF263', '#6AF9C4']
+		    });
+		    radializeColors()
+			draw_pie('#container3','Estadistica de anotaciones  por usuarios','Notas',serie)
+		}
+	})
+	
+})
+</script>
+	
+{% endblock statics %}
+
+
+{% block main_content %}
+<div class="row">
+	<div class="column medium-6">
+		<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+	</div>
+	<div class="column medium-6">
+		<div id="container2" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="column medium-6">
+		<div id="container3" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+	</div>
+	<div class="column medium-6">
+		<div id="container4" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+	</div>
+</div>
+
+	
+{% endblock main_content %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+	
+	<table class='table'>
+	   <caption class='caption'>Matriz de Turnos</caption>
+	   <thead>
+	      <tr class='head'>
+	      		<th style='width: 30px'>Num</th>
+	         	<th style='width: 110px'>Lunes</th>
+	        	<th style='width: 110px'>Martes</th>
+	         	<th style='width: 110px'>Miercoles</th>
+	         	<th style='width: 110px'>Jueves</th>
+	         	<th style='width: 110px'>Viernes</th>
+	         	<th style='width: 110px'>Sabado</th>
+	         	<th style='width: 110px'>Domingo</th>	         
+	      </tr>
+	   </thead>
+	   <tbody>
+	   		
+				{% for row in  matriz%}
+					<tr>
+						<td>{{forloop.counter}}</td>
+						{% for turno in  row.rol%}
+							<td>{{turno}}</td>
+						{% endfor %}
+					</tr>
+				{% endfor %}
+			 
+	   </tbody>
+	</table>
+
+	
+{% endblock main_content %}

@@ -39,11 +39,12 @@
 
 <table id='mitabla' class="table table-bordered">
   <thead>
-    <tr>
-      <th width="150px">No Serie</th>
+    <tr class='basic'>
+      <th width="150px">N&deg; Serie</th>
+      <th width="150px">N&deg; Inventario</th>
       <th width="150px">Nombre</th>
-      <th width="150px">Tipo</th>       
-      <th width="150px">Estado </th> 
+      <th width="120px">Tipo</th>       
+      <th width="100px">Estado </th> 
       <th width="150px">Modelo </th> 
       <th width="150px">Sistema </th>    
     </tr>
@@ -51,20 +52,23 @@
   <tbody>   
 
 	{% for device in  devices %}
-		<tr>
-		  <td> <a href="{% url 'detalle_dispositivo' device.pk %}"><i class='fi-page-search'> {{device.serie}} </i></a></td>
-	      <td> {{device.nombre}} </td>
-	      <td>{{device.tipo.nombre}} </td>
-	      <td>
-	      		{% if device.operando %}
-					<img src="{{STATIC_URL}}img/ok.png" style='width: 24px' alt="">
+		<tr >
+		  <td> <a class='arsenal' href="{% url 'detalle_dispositivo' device.serie %}"><i class='fi-page-search'> {{device.serie}} </i></a></td>
+		  <td> <label class='arsenal'>{{device.inventario}} </label></td>
+	      <td> <label class='arsenal'>{{device.nombre}} </label></td>
+	      <td><label class='arsenal'>{{device.tipo.nombre}} </label></td>
+	      <td >
+	      		{% if device.estado == "FUNCIONAL" %}
+					<img src="{{STATIC_URL}}img/ok.png" style='width: 34px' alt="">
+				{% elif device.estado == "FALLO" %}
+					<img src="{{STATIC_URL}}img/error.png" style='width: 34px' alt="">
 				{% else %}
-					<img src="{{STATIC_URL}}img/error.png" style='width: 24px' alt="">
+						<img src="{{STATIC_URL}}img/warning.png" style='width: 34px' alt="">
 				{% endif %} 
 	      </td>	
-	      <td>{{device.modelo}} </td>	
+	      <td><label class='arsenal'>{{device.modelo}} </label></td>	
 	      <td>
-	      	{{device.os}} <br>
+	      	<label class='arsenal'>{{device.os}} </label>
 	      	{% if device.os != "OTRO" and device.os != "N/A" %}
 				<a class="th radius" href="../img/demos/demo2.png">
 					<img src="{{MEDIA_URL}}dispositivos/dispositivo/{{device.os}}.png" style='width: 30px' alt="">
@@ -76,6 +80,6 @@
   </tbody>
 </table>
 {% else %}
-	<h6>No hay elementos que mostrar</h6>
+	<h6 class='arsenal'>No hay elementos que mostrar</h6>
 {% endif %}
 {% endblock main_content %}

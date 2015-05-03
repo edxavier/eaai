@@ -3,7 +3,7 @@
 	<link rel="stylesheet" href="{{STATIC_URL}}css/select2.css">	
 
 	<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
-		<script src='{{STATIC_URL}}js/vendor/tinymce/tinymce.min.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/tinymce/tinymce.min.js'></script>
 	<script src='{{STATIC_URL}}js/vendor/select2.min.js'></script>
 	<script src='{{STATIC_URL}}js/vendor/select2_locale_es.js'></script>
 	<script>
@@ -11,19 +11,21 @@
 			tinymce.init({
 			    selector: "textarea",
 			    language : 'es',
+			    fontsize_formats: "8pt 9pt 10pt 11pt 12pt ",
 			    browser_spellcheck : true ,
-			    plugins: "charmap textcolor emoticons advlist link searchreplace table directionality template bbcode print lists",
-			    toolbar: "undo redo link searchreplace forecolor backcolor inserttable template styleselect bold italic image alignleft aligncenter alignright bullist numlist",
+			    plugins: "charmap textcolor  link  table  template  print lists",
+
+			    toolbar: "undo redo  forecolor backcolor template styleselect bold italic image alignleft aligncenter alignright bullist numlist fontselect ",
 			    templates : [
 			        {
-			            title: "Entrega de Turno T1",
-			            url: "/bitacora/T1tmpl",
-			            description: "Entrega de turno T1"
+			            title: "Entrega de turno",
+			            url: "/bitacora/Tmp2",
+			            description: "Plantilla para entrega de turno"
 			        },
 			        {
-			            title: "Timestamp",
-			            //url: "time.htm",
-			            description: "Adds an editing timestamp."
+			            title: "Estado Radio Enlaces",
+			            url: "/bitacora/T1tmpl",
+			            description: "Estado emplazamientos (No aplicar estilos o clores al contenido de la tabla)"
 			        }
 			    ]	
 			 });
@@ -51,9 +53,6 @@
 
 {% endblock statics %}
 
-{% block left_content %}
-
-{% endblock left_content %}
 
 {% block main_content %}
 	
@@ -70,6 +69,11 @@
 
 <form method='POST' enctype='multipart/form-data' >
 	{% csrf_token %}
+	
+	{% if form.errors %}				 	
+		<audio src="{{MEDIA_URL}}audio/dubstep_alert.mp3" autoplay></audio>
+	{% endif %}
+
 	<div class="row">
 		<div class="medium-1 columns text-right">{{form.severity.label_tag}}</div>
 		<div class="medium-4 columns "> 

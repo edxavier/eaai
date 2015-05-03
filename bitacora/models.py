@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from sistemas.models import *
+from .manager import *
 # Create your models here.
 from django.dispatch import receiver
 
@@ -16,7 +17,7 @@ class Severidad_nota(models.Model):
 
     class Meta:
          #db_table = 'categories'
-        ordering = ['-created_at']
+        ordering = ['created_at']
         verbose_name_plural = 'Niveles de Severidad'
         verbose_name = 'Nivel de Severidad'
 
@@ -41,6 +42,9 @@ class Nota(models.Model):
     updated_at = models.DateTimeField(auto_now=True,verbose_name='actualizado el')
     user = models.ForeignKey(User, 
         verbose_name='Creado por',)
+
+    estadisticas=NotasManager()
+    objects = models.Manager() # The default manager.
 
     class Meta:
          #db_table = 'categories'

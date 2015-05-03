@@ -7,7 +7,7 @@ from .forms import *
 class CategoryAdmin (admin.ModelAdmin):
     list_display=('name','description','user','created_at', 'updated_at',)
     list_filter=('name',)
-    search_fields=('categoria__name',)
+    search_fields=('name','description','user')
     list_display_links = ('name',)
     list_per_page = 10
     ordering = ['name']
@@ -56,12 +56,12 @@ class PlaceAdmin (admin.ModelAdmin):
 
 
 class SystemAdmin (admin.ModelAdmin):
-    list_display=('name','description','is_active','ubication','category','created_at', 'updated_at','user',)
-    list_filter=('user__username',)
-    search_fields=('user__username','name','description')
+    list_display=('short_name','name','is_active','ubication','category','created_at', 'updated_at','user',)
+    list_filter=('user__username','name')
+    search_fields=('user__username','name','description','short_name')
     #presentar radio butons en lugar de select box
     radio_fields = {"sys_type": admin.HORIZONTAL}
-    list_display_links = ('name',)
+    list_display_links = ('short_name','name',)
     list_per_page = 10
     ordering = ['-created_at']
     #prepopulated_fields = {'slug' : ('name',)}

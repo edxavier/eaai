@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block statics %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.dynatable.css">
+	<script src='{{STATIC_URL}}js/vendor/jquery.dynatable.js'></script>
+	<script>
+		$(function() {
+			$('#mitabla').dynatable({
+				features: {
+				    paginate: true,
+				    sort: true,
+				    pushState: true,
+				    search: true,
+				    recordCount: true,
+				    perPageSelect: false
+				  },
+				  inputs: {
+				    paginationPrev: 'Anterior',
+				    paginationNext: 'Siguiente',
+				    recordCountText: 'Mostrando ',
+				    processingText: 'Processing...'
+				  },
+				   params: {
+				    records: 'registros',
+				  }
+				});
+	
+		});
+	</script>
+
+
+{% endblock statics %}
+
+
+{% block main_content %}
+{% load i18n %} 
+
+{% if  componentes %}	
+
+<table id='mitabla' class="table table-bordered">
+  <thead>
+    <tr class='basic'>
+      <th width="150px">No Serie</th>
+      <th width="150px">Tipo</th>
+      <th width="150px">Marca</th>
+      <th width="150px">Modelo</th>
+      <th width="100px">Estado</th>
+      <th width="100px">Instalado en:</th>
+      <th width="200px">Descripcion</th>
+      
+    </tr>
+  </thead>
+  <tbody>   
+
+	{% for component in  componentes %}
+		<tr >
+		  <td > <a href="#" class='arsenal'><i class='fi-page-search'> {{component.serie}} </i></a></td>
+		  <td>  
+		  		<label class='arsenal'>{{component.tipo.nombre}}</label>
+				<img src="{{MEDIA_URL}}{{component.tipo.imagen}}" style='width: 45px' alt="">				
+		  </td>
+		  <td>  <label class='arsenal'>{{component.marca}}</label></td>
+		  <td>  <label class='arsenal'>{{component.modelo}}</label></td>
+		  <td>  <label class='arsenal'>{{component.operando|yesno:"OK,Mal Estado"}}</label></td>
+		  <td>  <label class='arsenal'>{{component.dispositivo}}</label></td>
+		  <td>  <label class='arsenal'>{{component.descripcion}}</label></td>
+	    </tr>	
+	{% endfor %}
+  </tbody>
+</table>
+{% else %}
+	<h6>No hay elementos que mostrar</h6>
+{% endif %}
+{% endblock main_content %}

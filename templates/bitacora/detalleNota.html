@@ -4,6 +4,7 @@
 {% block main_content %}
 
 Detalle de {{nota}}
+	{% load user_filter %}
 <section id="detail_section">
 			<article id='{{nota.pk}}'>
 				<div class="row">
@@ -13,49 +14,84 @@ Detalle de {{nota}}
 					</div>
 					<div class="medium-10 columns nota">
 						<div class="clearfix cabecera">
-							<label class="left"> {{nota.created_at | date:"D d \d\e F \d\e\l Y " }} <br>
+							<label class="left subtitle2">
+							    {{nota.created_at | date:"D d \d\e F \d\e\l Y " }} <br>
 								{{nota.created_at | date:"h:i a  (\ e O \)"  }}
 						    </label>
-						    <label class="right">{{nota}}</label>
+						    <label class="right subtitle2">{{nota}}</label>
 						</div>
 
 						<div class="clearfix cuerpo">
-							<label class="left estado{{nota.severity.pk}} radius"> <i class='fi-flag'></i> {{nota.severity.name}} </label><br>
-							
+							<label class="left estado{{nota.severity.pk}} radius content"> <i class='fi-flag'></i> 
+								<span data-tooltip class="" title="{{nota.severity.description}}">
+									{{nota.severity.name}}
+								</span>			
+							 </label><br>
+							<div style='font-size: 12px'>
 							 {{nota.description|safe}}
-							
-							<label>
+							</div>
+							<label class='content'>
 								Palabras clave:
 								<i class='fi-pricetag-multiple'></i> {{nota.keywords|default:"No especificadas"}} <br>
 							</label>
 
 							{% if nota.referencia %}
-								<label>
+								<label class='content'>
 									 Referencia:<i class='fi-link'></i> <a href="{% url 'detail_nota' nota.referencia.pk %}">{{nota.referencia}}</a>
 
-									 <small style='font-style:italic;'>
-									 	{{nota.referencia.description|safe}}
-									 </small>
+									<blockquote >
+										<cite>
+											{{nota.referencia.description|safe}} <br>
+											<i>Por: 
+												 {{nota.referencia.user.first_name| default:nota.referencia.user.username}} 
+												{{nota.referencia.user.last_name}}
+
+											</i> 
+										</cite>
+									</blockquote>
+									 
 								</label>
 							{% else %}
-								<label> Referencia:<i class='fi-link'></i> No especificada</label>
-							{% endif %} <br>
-
+								<label class='content'> Referencia:<i class='fi-link'></i> No especificada</label>
+							{% endif %} 
 							<ul>					
-							<h6>Sistemas relacionados a la nota</h6>							
-							{% for sistema in sistemas %}
-								<li><label class='label round'>{{sistema.name}}</label></li>
-							{% empty %}
-								<label>No hay sistemas relacionados</label>
-							{% endfor %}
+								<h6 class='content'>Sistemas relacionados a la nota:</h6>							
+								{% for sistema in sistemas %}
+									<span data-tooltip aria-haspopup="true" class="has-tip" data-options="show_on:large" title="{{sistema.name}}">
+										<a><label class='label radius tags content' >{{sistema.short_name}}</label></a>
+									</span>
+								{% empty %}
+									<label>No hay sistemas relacionados</label>
+								{% endfor %}
+							</ul> 
 							{% if nota.adjuntos %}
-								<br><label >Archivos adjuntos: </label> <a href="{{MEDIA_URL}}{{nota.adjuntos}}">{{nota.adjuntos}}</a>
+								<label class='content'>Archivo adjunto: </label>
+								{% if filetype|file_type == "image" %}
+									<label>{{nota.adjuntos|split:"/"|last}}</label>
+									<a class="th radius">
+										<img src="{{MEDIA_URL}}{{nota.adjuntos}}" alt="">
+									</a>
+								{% elif filetype|file_type == "audio" %}
+									<label>{{nota.adjuntos|split:"/"|last}}</label>
+									<audio src="{{MEDIA_URL}}{{nota.adjuntos}}" controls ></audio>
+								{% elif filetype|file_type == "video" %}
+									<label>{{nota.adjuntos|split:"/"|last}}</label>
+									<video src="{{MEDIA_URL}}{{nota.adjuntos}}" controls>
+									  Tu navegador no implementa el elemento <code>video</code>.
+									</video>
+								{% else %}
+									<label>{{nota.adjuntos|split:"/"|last}}</label>
+									<a href="{{MEDIA_URL}}{{nota.adjuntos}}"> 
+										<img src="{{STATIC_URL}}img/files_types/{{nota.adjuntos|file_format:"."}}.png" style='width: 40px'>
+									</a> 
+								{% endif %}
 							{% endif %}
-							</ul>
-							<label>Modificada el: {{nota.updated_at| date:"D d \d\e F \d\e\l Y \a \l\a\s h:i a" }}</label>
+							<br> <br>
+							<label class='content'>Modificada el: {{nota.updated_at| date:"D d \d\e F \d\e\l Y \a \l\a\s h:i a" }}</label>
+							<label class='content'>Creada el: {{nota.created_at| date:"D d \d\e F \d\e\l Y \a \l\a\s h:i a" }}</label>
 						</div>
-						<div class="clearfix tags">
-							<label class='left'><i class='fi-clock'></i> Hace {{nota.created_at|timesince}}</label>
+						<div class="clearfix notafooter">
+							<label class='left subtitle2'><i class='fi-clock'></i> Hace {{nota.created_at|timesince}}</label>
 						</div>
 					</div>
 				</div>

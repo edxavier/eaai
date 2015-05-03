@@ -2,8 +2,18 @@
 
 
 {% block statics %}
+<!-- JqWidgets styles -->
+<link rel="stylesheet" href="{{STATIC_URL}}js/jqwidgets/styles/jqx.base.css">
+<link rel="stylesheet" href="{{STATIC_URL}}js/jqwidgets/styles/jqx.bootstrap.css">
+
 <link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css">
 <script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
+<!-- Jqwidget -->
+<script src="{{STATIC_URL}}js/jqwidgets/jqxcore.js" type="text/javascript"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jqwidgets/jqxwindow.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jqwidgets/jqxbuttons.js"></script>
+
+
 <script>
 	$(document).ready(function() {
 		$("article").hover(function() {
@@ -20,32 +30,33 @@
 			/* Act on the event */
 			id=event.target.id;
 			event.preventDefault()
-			$( "#dialog-message" ).load( "/bitacora/notas/"+id+" #detail_section", function() {
-				$( "#dialog-message" ).dialog( "option", "title", "Detalles de la nota: "+id );
-			  	$( "#dialog-message" ).dialog( "open" );
+			$( "#note_content" ).load( "/bitacora/notas/"+id+" #detail_section", function() {
+				//GET WINDOW HEIGHT AND WIDTH
+				var winHeight = $(window).height();
+				var winWidth = $(window).width();
+			  	$('#window').jqxWindow('open');
+
+			  	//KEEP CENTERED
+				var posX = (winWidth/2) - ($('#window').width()/2) + $(window).scrollLeft();
+				var posY = (winHeight/2) - ($('#window').height()/2) + $(window).scrollTop();
+
+				$('#window').jqxWindow({position: {x: posX, y: posY}});
+			  	$('#window').jqxWindow('setTitle', "Detalles de la nota: "+id );
+			  	$('#Window').jqxWindow('bringToFront');
 			});
 		});
 
-		$( "#dialog-message" ).dialog({
-	      modal: true,
-	      autoOpen:false,
-	      maxHeight: 600,
-	      width: "90%",
-	      position: { my: "center top", at: "center top", of: window },
-	      show: {
-	        effect: "clip",
-	        duration: 1000
-	      },
-	      hide: {
-	        effect: "slide",
-	        duration: 1000
-	      },
-	      buttons: {
-	        Ok: function() {
-	          $( this ).dialog( "close" );
-	        }
-	      }
-	    });
+
+	    $('#window').jqxWindow({
+            minWidth: '1200px' , height: "85%",
+            theme: "bootstrap",isModal: true,
+            autoOpen: false,animationType: 'combined',
+            showCollapseButton: true
+        });
+        $('#window').on('close', function (event) {   
+        	$( "#note_content" ).html("")
+        }); 
+
 
 	});
 </script>
@@ -69,6 +80,7 @@
 
 {% block main_content %}
 
+	{% load user_filter %}
 
 	<dl class="sub-nav ">
 		<dt>Opciones:</dt>
@@ -100,45 +112,61 @@
 		{% for  nota in notas %}
 			<article >
 				<div class="row">
-					<div class="medium-2 columns text-center autor">
+					<div class="medium-2 columns text-center ">
 						<img src="{{MEDIA_URL}}{{nota.user.perfil.foto}}" alt="">
 						{% if  nota.user.first_name %}
-							<label class='small-12 label radius'>{{nota.user.first_name}} {{nota.user.last_name |truncatewords:1}}</label>
+							<label class='small-12 label radius autor'>{{nota.user.first_name}} {{nota.user.last_name |truncatewords:1}}</label>
 						{% else %}
-							<label class='small-12 label radius'>{{nota.user.username}}</label>
+							<label class='small-12 label radius autor'>{{nota.user.username}}</label>
 						{% endif %}
 					</div>
 					<div class="medium-10 columns nota">
 						<div class="clearfix cabecera">
-							<label class="left"> {{nota.created_at | date:"D d \d\e F \d\e\l Y " }} | {{nota.created_at | utc |  date:"D d \d\e F \d\e\l Y "}}<br>
+							<label class="left subtitle2"> {{nota.created_at | date:"D d \d\e F \d\e\l Y " }} | {{nota.created_at | utc |  date:"D d \d\e F \d\e\l Y "}}<br>
 								{{nota.created_at | date:"h:i a  (\ \l\o\c\a\l \)"  }} -
 								{{nota.created_at | utc |  date:"H:i  (\ e O \) "  }}
 						    </label>
-						    <label class="right">{{nota}}</label>
+						    <label class="subtitle2 right">{{nota}}</label>
 						</div>
 
 						<div class="clearfix cuerpo">
-							<label class="left estado{{nota.severity.pk}} radius"> <i class='fi-flag'></i> 
+							<label class="left estado{{nota.severity.pk}} radius content"> <i class='fi-flag'></i> 
 								<span data-tooltip class="" title="{{nota.severity.description}}">
 									{{nota.severity.name}}
 								</span>
 			
 							 </label><br>
-							{{nota.description|safe|truncatewords:35}}
+							<div style='font-size: 12px'>
+								{{nota.description|safe|truncatewords_html:50}}
+							</div>
 							{% if nota.keywords %}
-							<label>
-								<i class='fi-pricetag-multiple'></i> {{nota.keywords}}
-							</label>
+								<label class='content'>
+									<i class='fi-pricetag-multiple'></i> {{nota.keywords}}
+								</label>
 							{% endif %}
 							{% if nota.referencia %}
-							<label>
-								<i class='fi-link'></i> referencia a <a href="#{{nota.referencia.pk}}">{{nota.referencia}}</a>
-							</label>
+								<label class='content'>
+									<i class='fi-link'></i> referencia a <a href="#{{nota.referencia.pk}}">{{nota.referencia}}</a>
+								</label>
+							{% endif %}
+							
+							{% if nota.adjuntos %}
+								<label class='content'>
+									<i class='fi-paperclip'></i> Archivo adjunto:
+									<img src="{{STATIC_URL}}img/files_types/{{nota.adjuntos|file_format:"."}}.png" style='width: 40px'>
+								</label>
+							{% endif %}
+
+							{% if nota.systems.all.count > 0 %}
+								<label class='content'>
+									<i class='fi-monitor'></i> 
+									Sistemas involucrados: <a href="#{{nota.pk}}">{{nota.systems.all.count}}</a>
+								</label>
 							{% endif %}
 						</div>
-						<div class="clearfix tags">
-							<label class='left'><i class='fi-clock'></i> Hace {{nota.created_at|timesince}}</label>
-							<label class="right"><a href="{% url 'detail_nota' nota.pk %}" class='det' id='{{nota.pk}}'> <i class='fi-zoom-in'></i> Ver detalles</a></label>
+						<div class="clearfix notafooter">
+							<label class='left subtitle2'><i class='fi-clock'></i> Hace {{nota.created_at|timesince}}</label>
+							<label class="right subtitle2"><a href="{% url 'detail_nota' nota.pk %}" class='det' id='{{nota.pk}}'> <i class='fi-zoom-in'></i> Ver detalles</a></label>
 						</div>
 					</div>
 				</div>
@@ -150,15 +178,15 @@
 
 </section>
 
-<div class="row">
-<div id="dialog-message" title="Detalles de nota">
-  <p>
-    <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-    Your files have downloaded successfully into the My Downloads folder.
-  </p>
-  <p>
-    Currently using <b>36% of your storage space</b>.
-  </p>
-</div>
-</div>
+
+<!-- Ventana para mostrar los detalles de una nota -->
+	<div id="window">
+            <div>
+                Titulo
+            </div>
+            <div>
+                <div id="note_content">
+                </div>
+            </div>
+    </div>
 {% endblock main_content %}

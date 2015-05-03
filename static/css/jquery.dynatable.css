@@ -25,6 +25,9 @@ tr:nth-child(even){
 th a {
   color: #fff;
 }
+a {
+  color: #fff;
+}
 th a:hover {
   color: #fff;
 }
@@ -73,6 +76,7 @@ display: inline;
 
 .dynatable-pagination-links {
   float: right;
+  color: #fff
 }
 
 .dynatable-record-count {

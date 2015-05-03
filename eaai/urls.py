@@ -4,7 +4,7 @@ from eaai import settings
 from django.contrib import admin
 from bitacora.views import CategoryViewSet, UserViewSet
 from rest_framework import routers
-
+#from horario.views import saveMachinereboots
 router = routers.DefaultRouter()
 router.register(r'categorias', CategoryViewSet)
 router.register(r'usuarios', UserViewSet)
@@ -12,11 +12,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-#    url(r'^$', home.as_view(), name='home'),
-    #url(r'^', 'django.contrib.auth.views.login', {'template_name':'index.html'},name='login'),
-   # url(r'^logout/', 'django.contrib.auth.views.logout', name='logout'),
-    # url(r'^eaai/', include('eaai.foo.urls')),
-
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'api/', include(router.urls)),
@@ -28,6 +23,10 @@ urlpatterns = patterns('',
     url(r'^bitacora/', include('bitacora.urls')),
     url(r'^sistemas/', include('sistemas.urls')),
     url(r'^dispositivos/', include('dispositivos.urls')),
+    
+    url(r'^horario/', include('horario.urls')),
+    url(r'^gestion/', include('gestion.urls')),
+
     url(r'^', include('usuario.urls')),
     url(r'^select2/', include('django_select2.urls')),
 

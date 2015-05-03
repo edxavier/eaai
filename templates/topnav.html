@@ -15,26 +15,47 @@
 				<li><a href="/"><i class="fi-home size-14"></i> Inicio</a></li>
 			
 			</ul>
-
 				
 				<!-- Right Nav Section -->
-				<ul class="right">
-				<li class=""><a href="http://192.168.137.200:8080"> <i class="fi- "></i> Version Anterior </a></li>
+				<ul class="right ">
+				
 				{% if  user.is_authenticated %}	
+					<li class="has-dropdown sn">
+						<a> <i class="fi-burst-new"></i> Gestion</a>
+						<ul class="dropdown show-for-large-down">
+							<li ><a href="{% url 'hosts_list' %}"><i class='fi-monitor'></i> Hosts</a></li>
+							<li ><a href="{% url 'boot_hist' %}"><i class='fi-list'></i> Hist. Inicios</a></li>
+						</ul>
+					</li>
+					<li class="has-dropdown sn">
+						<a> <i class="fi-burst-new"></i> Horario</a>
+						<ul class="dropdown show-for-large-down">
+							<li ><a href="{% url 'ver_matriz' %}"><i class='fi-list'></i> Matriz</a></li>
+							<li ><a href="{% url 'ver_horario' %}"><i class='fi-calendar'></i> Horario</a></li>
+							<li ><a href="{% url 'ver_generador' %}"><i class='fi-refresh'></i> Rotar Horario</a></li>
+						</ul>
+					</li>
 					<li class="has-dropdown sn">
 						<a> <i class="fi-burst-new"></i> Equipos</a>
 						<ul class="dropdown show-for-large-down">
 							<li ><a href="{% url 'list_dispositivos' %}"><i class='fi-list'></i> Listar</a></li>
-							<li ><a href="{% url 'search_notas' %}"><i class='fi-widget'></i> Componentes</a></li>
+							<li ><a href="{% url 'list_componentes' %}"><i class='fi-widget'></i> Componentes</a></li>
 						</ul>
-					</li>			
-					<li class="sn"><a href="{% url 'list_categorias' %}"><i class=" "></i> Categorias</a></li>
-					<li class="sn"><a href="{% url 'list_sistemas' %}"><i class="fi-monitor "></i> Sistemas</a></li>
+					</li>
 					<li class="has-dropdown sn">
-						<a> <i class="fi-book"></i>  Bitacora</a>
+						<a> <i class="fi-book"></i>  Sistemas</a>
 						<ul class="dropdown show-for-large-down">
+							<li class="sn"><a href="{% url 'list_sistemas' %}"><i class="fi-list "></i> Lista</a></li>
+							<li class="sn"><a href="{% url 'list_categorias' %}"><i class=" "></i> Categorias</a></li>
+						</ul>
+					</li>
+					<li class="has-dropdown sn">
+						<a > <i class="fi-book"></i>  Bitacora</a>
+						<ul class="dropdown show-for-large-down">
+							<li ><a href="{% url 'list_notas' %}"><i class='fi-list'></i> Notas</a></li>
 							<li ><a href="{% url 'new_nota' %}"><i class='fi-plus'></i> Agregar Nota</a></li>
 							<li ><a href="{% url 'search_notas' %}"><i class='fi-magnifying-glass'></i> Busqueda</a></li>
+							<li ><a href="/bitacora/estadisticas_page/"><i class='fi-graph-pie'></i> Estadisticas</a></li>
 						</ul>
 					</li>			
 					<li class="has-dropdown sn">

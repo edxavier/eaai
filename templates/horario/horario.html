@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+
+
+	<dl class="sub-nav ">
+		<dt>Opciones:</dt>
+			<dd class="sn "><a href="{% url 'ver_horarioPDF' %}">
+				<i class='fi-list-bullet'></i> Ver en PDF</a>
+			</dd>
+	</dl>
+	<blockquote>
+		El horario actual tiene una validez de <strong>{{valides.semanas}} semanas</strong>, la cual se vence el <strong> {{valides.fecha_final | date:"d \d\e F \d\e\l Y"}}</strong>. 
+		Todo lo que esta despues es una estimacion segun la matriz y el orden de cada persona. <br>
+		<cite>13 semanas son generadas en total.</cite>
+	</blockquote>
+	
+	{% for semana in  semanas %}
+
+
+	    	<table class='table'>
+	    		{% with turno=semana.semanaH|first %}
+	    			{% with inicio=turno.horario|first final=turno.horario|last%}
+						<caption class='caption' >
+							Semana del {{inicio.fecha|date:"d \d\e F"}} al {{final.fecha|date:"d \d\e F \d\e\l Y"}} 
+						</caption>
+					{% endwith %}
+				{% endwith %}
+			   <thead>
+			  
+					<tr class='head'>		
+			      		<th style='width: 120px'>Nombres</th>
+				         	
+				         	{% with turno=semana.semanaH|first %}
+				         		{% for fechas in  turno.horario %}
+				         			<th style='width: 110px'>{{fechas.fecha|date:"D d "}} </th>	
+				         		{% endfor %}								
+							{% endwith %}
+				         
+			       </tr>
+			   </thead>
+			<tbody>
+				    {% for  item in  semana.semanaH %}								
+						<tr>
+							 <td style='text-align: left'>{{item.nombre}} </td>
+							{% for turns in  item.horario %}
+								<td>	{{turns.turno}} </td>
+							{% endfor %}
+						<tr>
+				    {% endfor %}
+	    	</tbody>
+			</table>
+
+			
+	{% endfor %}
+
+{% comment %}
+
+	<table class='table'>
+		{% with fecha=fechas|first  final=fechas|last %}
+		    <caption class='caption'>Semana del {{fecha.fecha|date:"d \d\e F"}} al {{final.fecha|date:"d \d\e F \d\e\l Y"}} </caption>
+		{% endwith %}
+	   <thead>
+	      <tr class='head'>
+	      		<th style='width: 120px'>Nombres</th>
+	         	
+	         	{% for fecha in  fechas %}
+					<th style='width: 110px'>{{fecha.fecha|date:"D d b"}} </th>
+				{% endfor %}
+         
+	      </tr>
+	   </thead>
+	   <tbody>
+			{% for shedul in horarios %}
+				<tr>
+					<td style='text-align: left'>{{shedul.empleado.nombre}} </td> 
+					{% for rol in  shedul.empleado.horario_emp %}
+						<td>{{rol.turno}} </td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+		
+{% endcomment %}
+{% endblock main_content %}

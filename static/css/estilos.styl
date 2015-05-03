@@ -1,6 +1,71 @@
 @import 'nib'
+@import 'estilo.css'
 @import 'nib/gradients'
 @import 'nib/vendor'
+@font-face {
+    font-family: Caviar;
+    src: url("/static/fonts/CaviarDreams.ttf");
+}
+@font-face {
+    font-family: Jose;
+    src: url("/static/fonts/JosefinSans-Regular.ttf");
+}
+@font-face {
+    font-family: Arsenal;
+    src: url("/static/fonts/Arsenal-Regular.otf");
+}
+@font-face {
+    font-family: Basic;
+    src: url("/static/fonts/BasicLig_ltd.ttf");
+}
+@font-face {
+    font-family: Europe;
+    src: url("/static/fonts/Europe.ttf");
+}
+
+@font-face {
+    font-family: Existence;
+    src: url("/static/fonts/Existence-Light.otf");
+}
+
+@font-face {
+    font-family: Vibes;
+    src: url("/static/fonts/GreatVibes-Regular.ttf");
+}
+
+@font-face {
+    font-family: Aaarg;
+    src: url("/static/fonts/Aaargh.ttf");
+}
+
+@font-face {
+    font-family: Blesd;
+    src: url("/static/fonts/BLESD___.otf");
+}
+
+.title
+	font-family Caviar
+	font-weight bold
+.subtitle
+	font-family Jose
+
+.arsenal
+	font-family Arsenal
+.basic
+	font-family Basic
+label
+	font-family Basic
+input
+	font-family Arsenal
+
+.subtitle2
+	font-family Basic
+
+.content
+	font-family Arsenal
+
+.autor
+	font-family Aaarg
 
 vendor-prefixes = o mz ms webkit official
 
@@ -65,6 +130,11 @@ footer
 	color rgba(grisClaro,0.5)
 	border-top 4px solid azulCeleste
 	padding-top 10px
+
+blockquote
+	border-left 5px solid colorRojoScarlet
+	font-size 12px
+	border-radius 2px
 
 
 .credit
@@ -230,6 +300,7 @@ section
 			.cuerpo
 				background-color grisClaro
 				border-radius 5px
+				border-left 2px solid  rgba(azulCeleste,0.2)
 				margin 0.7em 0em 1em 0em
 				padding 0.5em 1em 1em 0.5em
 				p
@@ -239,8 +310,13 @@ section
 					small
 						p
 							font-size 10px
-			.tags
+			.notafooter
 				border-top 0.1em solid rgba(colorAzulSuperLight,0.7)
+			.tags
+				text-decoration none
+				color black
+				font-size 10px
+				background-color #dfc27d
 		
 				
 

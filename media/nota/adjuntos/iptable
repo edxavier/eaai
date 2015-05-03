@@ -1,0 +1,8 @@
+ip route add -net 10.22.35.0 netmask 255.255.255.0 gw 10.160.80.2
+
+
+iptables -t nat -A POSTROUTING -s 10.160.80.51 -o eth2 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 10.160.80.145 -o eth2 -j MASQUERADE
+
+iptables -t nat -A POSTROUTING -s 10.160.80.0 -o eth2 -j MASQUERADE
+

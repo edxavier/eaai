@@ -1,0 +1,1030 @@
+{% extends "base.html" %}
+
+{% block statics %}
+<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css">
+<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.dynatable.css">
+<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
+<script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
+<script src="{{STATIC_URL}}js/amcharts/amcharts.js" type="text/javascript"></script>
+<script src="{{STATIC_URL}}js/amcharts/gauge.js" type="text/javascript"></script>
+<script src="{{STATIC_URL}}js/amcharts/serial.js" type="text/javascript"></script>
+<script src="{{STATIC_URL}}js/amcharts/themes/patterns.js" type="text/javascript"></script>
+
+<script src='{{STATIC_URL}}js/vendor/jquery.dynatable.js'></script>
+	<script>
+		  $(function() {
+		    $( "#tabs" ).tabs();
+		    $('#sw,#dev').dynatable({
+				features: {
+				    paginate: true,
+				    sort: true,
+				    pushState: true,
+				    search: true,
+				    recordCount: true,
+				    perPageSelect: false
+				  },
+				  inputs: {
+				    paginationPrev: 'Anterior',
+				    paginationNext: 'Siguiente',
+				    recordCountText: 'Mostrando ',
+				    processingText: 'Processing...'
+				  },
+				   params: {
+				    records: 'registros',
+				  }
+				});		   
+		  });
+
+		 	var chart;
+            var arrow;
+            var axis;
+            var ram = "{{memory.ram}}"
+            var ram_used = "{{memory.used_ram}}"
+            var divs = ram / 3
+
+            AmCharts.ready(function () {
+                // create angular gauge
+                chart = new AmCharts.AmAngularGauge();
+                chart.addTitle("Memoria Ram");
+
+                // create axis
+                axis = new AmCharts.GaugeAxis();
+                axis.startValue = 0;
+				axis.axisThickness = 1;
+                axis.valueInterval = ram/10;
+                axis.endValue = ram;
+                // color bands
+                var band1 = new AmCharts.GaugeBand();
+                band1.startValue = 0;
+                band1.endValue = divs;
+                band1.color = "#00CC00";
+
+                var band2 = new AmCharts.GaugeBand();
+                band2.startValue = divs;
+                band2.endValue = divs*2;
+                band2.color = "#ffac29";
+
+                var band3 = new AmCharts.GaugeBand();
+                band3.startValue = divs*2;
+                band3.endValue = ram;
+                band3.color = "#ea3838";
+                //band3.innerRadius = "95%";
+
+                axis.bands = [band1, band2, band3];
+
+                // bottom text
+                axis.bottomTextYOffset = -20;
+                axis.setBottomText("0 Mb");
+                chart.addAxis(axis);
+
+                // gauge arrow
+                arrow = new AmCharts.GaugeArrow();
+                chart.addArrow(arrow);
+
+                chart.write("chartdiv");
+                randomValue()
+                // change value every 20 seconds
+                setInterval(randomValue, 20000);
+            });
+
+            // set random value
+            function randomValue() {
+	            $.ajax({
+					url: '/gestion/json/mem/'+"{{host.ip}}/",
+					type: 'get',
+					dataType: 'json',
+					 success: function(data) {
+					 	arrow.setValue(data.used_ram);
+					 	arrow2.setValue(data.swap-data.free_swap);
+                		axis.setBottomText(data.used_ram + " Mb");
+                		axis2.setBottomText(data.swap-data.free_swap + " Mb");
+                		$("#uram").html(data.used_ram)
+                		$("#uswap").html(data.swap-data.free_swap)
+				    }
+				})
+            }
+
+
+
+//++++++++++++++++++++++++++++++++
+			var chart2;
+            var arrow2;
+            var axis2;
+            var swap = "{{memory.swap}}"
+            var swap_used = "{{uswap}}"
+            var divs2 = swap / 3
+
+            AmCharts.ready(function () {
+                // create angular gauge
+                chart2 = new AmCharts.AmAngularGauge();
+                chart2.addTitle("Memoria Swap");
+
+                // create axis
+                axis2 = new AmCharts.GaugeAxis();
+                axis2.startValue = 0;
+				axis2.axisThickness = 1;
+                axis2.valueInterval = swap/10;
+                axis2.endValue = swap;
+                // color bands
+                var band11 = new AmCharts.GaugeBand();
+                band11.startValue = 0;
+                band11.endValue = divs2;
+                band11.color = "#00CC00";
+
+                var band22 = new AmCharts.GaugeBand();
+                band22.startValue = divs2;
+                band22.endValue = divs2*2;
+                band22.color = "#ffac29";
+
+                var band33 = new AmCharts.GaugeBand();
+                band33.startValue = divs2*2;
+                band33.endValue = swap;
+                band33.color = "#ea3838";
+                //band3.innerRadius = "95%";
+
+                axis2.bands = [band11, band22, band33];
+
+                // bottom text
+                axis2.bottomTextYOffset = -20;
+                axis2.setBottomText("0 Mb");
+                chart2.addAxis(axis2);
+
+                // gauge arrow
+                arrow2 = new AmCharts.GaugeArrow();
+                chart2.addArrow(arrow2);
+
+                chart2.write("swap");
+               randomValue()
+                // change value every 20 seconds
+                setInterval(randomValue, 60000);
+            });
+
+
+//++++++++++++++++++++++++++++++++
+			var chart3;
+            var arrow3;
+            var axis3;
+            var load5 = "{{load.load_1}}"
+            var divs3 = 100 / 3
+
+            AmCharts.ready(function () {
+                // create angular gauge
+                chart3 = new AmCharts.AmAngularGauge();
+                chart3.addTitle("Load Avg");
+
+                // create axis
+                axis3 = new AmCharts.GaugeAxis();
+                axis3.startValue = 0;
+				axis3.axisThickness = 1;
+                axis3.valueInterval = 10;
+                axis3.endValue = 100;
+                // color bands
+                var band11 = new AmCharts.GaugeBand();
+                band11.startValue = 0;
+                band11.endValue = divs3;
+                band11.color = "#00CC00";
+
+                var band22 = new AmCharts.GaugeBand();
+                band22.startValue = divs3;
+                band22.endValue = divs3*2;
+                band22.color = "#ffac29";
+
+                var band33 = new AmCharts.GaugeBand();
+                band33.startValue = divs3*2;
+                band33.endValue = 100;
+                band33.color = "#ea3838";
+                //band3.innerRadius = "95%";
+
+                axis3.bands = [band11, band22, band33];
+
+                // bottom text
+                axis3.bottomTextYOffset = -20;
+                axis3.setBottomText("0 %");
+                chart3.addAxis(axis3);
+
+                // gauge arrow
+                arrow3 = new AmCharts.GaugeArrow();
+                chart3.addArrow(arrow3);
+
+                chart3.write("load_avg");
+                // change value every 2 seconds
+                randomValue3()
+                setInterval(randomValue3, 15000);
+            });
+
+            // set random value
+            function randomValue3() {
+              $.ajax({
+					url: '/gestion/json/load/'+"{{host.ip}}/",
+					type: 'get',
+					dataType: 'json',
+					 success: function(data) {
+					 	arrow3.setValue(parseFloat(data.load));
+                		axis3.setBottomText(parseFloat(data.load) + " %");
+                		$("#lavg").html(data.load)
+				    }
+				})
+            }
+
+//#######################################
+	        var serial_chart;
+
+            var chartData = [];
+            var the_data;
+          
+
+
+            AmCharts.ready(function () {
+                // first we generate some random data
+                //generateChartData();
+                $.ajax({
+					url: '/gestion/json/memh/'+"{{host.ip}}/",
+					type: 'get',
+					dataType: 'json',
+					 success: function(data) {
+					 	for(var i=0; i < data.length;i++){
+					 		var newDate = new Date(data[i].date);
+					 		chartData.push({
+		                        date: data[i].date,
+		                        perc: ( data[i].mem_used *100 / data[i].mem).toFixed(2)
+		                    });
+
+					 	}
+					    
+		                //console.log(chartData[0].date)
+		                // SERIAL CHART
+		                serial_chart = new AmCharts.AmSerialChart();
+		                serial_chart.pathToImages = "/static/js/amcharts/images/";
+		                serial_chart.dataProvider = chartData;
+		                serial_chart.categoryField = "date";
+		                serial_chart.theme = "patterns"
+		                serial_chart.dataDateFormat = "DD/MM/YYYY JJ:NN";
+		                serial_chart.titles = [{
+											"text": "Historial de uso de memoria RAM",
+											"size": 15
+										}]
+						
+
+		                // data updated event will be fired when chart is first displayed,
+		                // also when data will be updated. We'll use it to set some
+		                // initial zoom
+		                serial_chart.addListener("dataUpdated", zoomChart);
+
+		                // AXES
+		                // Category
+		                var categoryAxis = serial_chart.categoryAxis;
+		                categoryAxis.parseDates = true; // in order char to understand dates, we should set parseDates to true
+		                categoryAxis.minPeriod = "mm"; // as we have data with minute interval, we have to set "mm" here.			 
+		                categoryAxis.dateFormats = [{
+							    period: 'fff',
+							    format: 'JJ:NN:SS'
+							}, {
+							    period: 'ss',
+							    format: 'JJ:NN:SS'
+							}, {
+							    period: 'mm',
+							    format: 'JJ:NN'
+							}, {
+							    period: 'hh',
+							    format: 'JJ:NN'
+							}, {
+							    period: 'DD',
+							    format: 'MMM DD'
+							}, {
+							    period: 'WW',
+							    format: 'MMM DD'
+							}, {
+							    period: 'MM',
+							    format: 'MMM YYYY'
+							}, {
+							    period: 'YYYY',
+							    format: 'MMM YYYY'
+							}];
+		                categoryAxis.gridAlpha = 0.07;
+		                categoryAxis.axisColor = "#DADADA";
+
+		                // Value
+		                var valueAxis = new AmCharts.ValueAxis();
+		                valueAxis.gridAlpha = 0.07;
+		                valueAxis.logarithmic = true;
+		                valueAxis.title = "% Uso de Memoria RAM";
+		                serial_chart.addValueAxis(valueAxis);
+
+		                // GRAPH
+		                var graph = new AmCharts.AmGraph();
+		                graph.type = "smoothedLine"; // try to change it to "column"
+		                graph.title = "% Mem. Usada";
+		                graph.theme = "patterns";
+		                graph.balloonText = "Usado [[value]] %" 
+		                graph.valueField = "perc";
+		                graph.lineAlpha = 1;
+		                graph.lineColor = "red";
+		                graph.fillAlphas = 0.05; // setting fillAlphas to > 0 value makes it area graph
+		                serial_chart.addGraph(graph);
+		                // GRAPH
+		                /*var graph = new AmCharts.AmGraph();
+		                graph.type = "line"; // try to change it to "column"
+		                graph.title = "red line";
+		                graph.valueField = "ram";
+		                graph.lineAlpha = 1;
+		                graph.lineColor = "green";
+		                graph.fillAlphas = 0.05; // setting fillAlphas to > 0 value makes it area graph
+		                serial_chart.addGraph(graph);
+	*/
+		                
+
+		                // CURSOR
+		                var chartCursor = new AmCharts.ChartCursor();
+		                chartCursor.cursorPosition = "mouse";
+		                chartCursor.categoryBalloonDateFormat = "DD/MM/YYYY JJ:NN";
+		                serial_chart.addChartCursor(chartCursor);
+
+		                var legend = new AmCharts.AmLegend();
+		                legend.align = "center"
+
+						serial_chart.addLegend(legend);
+
+		                // SCROLLBAR
+		                var chartScrollbar = new AmCharts.ChartScrollbar();
+
+		                serial_chart.addChartScrollbar(chartScrollbar);
+
+		                // WRITE
+		                serial_chart.write("MemHist");
+            	    }
+				})
+
+            });
+
+            // this method is called when chart is first inited as we listen for "dataUpdated" event
+            function zoomChart() {
+                // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+                
+                if(chartData.length>40){
+      //          	serial_chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
+                }else{
+    //            	serial_chart.zoomToIndexes(chartData.length - 2, chartData.length - 1);
+                }
+            }
+           //####################33333333
+           //#######################################
+	        var serial2;
+
+            var chartData2 = [];
+
+
+            AmCharts.ready(function () {
+                // first we generate some random data
+                //generateChartData();
+                $.ajax({
+					url: '/gestion/json/loadh/'+"{{host.ip}}/",
+					type: 'get',
+					dataType: 'json',
+					 success: function(data) {
+					 	for(var i=0; i < data.length;i++){
+					 		var newDate = new Date(data[i].date);
+					 		chartData2.push({
+		                        date: data[i].date,
+		                        perc1: data[i].load1,
+		                        perc5: data[i].load5,
+		                        perc15: data[i].load15
+		                    });
+
+					 	}
+					    
+		                //console.log(chartData[0].date)
+		                // SERIAL CHART
+		                serial2 = new AmCharts.AmSerialChart();
+		                serial2.pathToImages = "/static/js/amcharts/images/";
+		                serial2.dataProvider = chartData2;
+		                serial2.categoryField = "date";
+		                serial2.dataDateFormat = "DD/MM/YYYY JJ:NN";
+		                serial2.titles = [{
+											"text": "Historial Carga CPU",
+											"size": 15
+										}]
+						
+
+		                // data updated event will be fired when chart is first displayed,
+		                // also when data will be updated. We'll use it to set some
+		                // initial zoom
+		                serial2.addListener("dataUpdated", zoomChart2);
+
+		                // AXES
+		                // Category
+		                var categoryAxis = serial2.categoryAxis;
+		                categoryAxis.parseDates = true; // in order char to understand dates, we should set parseDates to true
+		                categoryAxis.minPeriod = "mm"; // as we have data with minute interval, we have to set "mm" here.			 
+		                categoryAxis.dateFormats = [{
+							    period: 'fff',
+							    format: 'JJ:NN:SS'
+							}, {
+							    period: 'ss',
+							    format: 'JJ:NN:SS'
+							}, {
+							    period: 'mm',
+							    format: 'JJ:NN'
+							}, {
+							    period: 'hh',
+							    format: 'JJ:NN'
+							}, {
+							    period: 'DD',
+							    format: 'MMM DD'
+							}, {
+							    period: 'WW',
+							    format: 'MMM DD'
+							}, {
+							    period: 'MM',
+							    format: 'MMM YYYY'
+							}, {
+							    period: 'YYYY',
+							    format: 'MMM YYYY'
+							}];
+		                categoryAxis.gridAlpha = 0.07;
+		                categoryAxis.axisColor = "#DADADA";
+
+		                // Value
+		                var valueAxis = new AmCharts.ValueAxis();
+		                valueAxis.gridAlpha = 0.07;
+		                valueAxis.min = 0;
+		                valueAxis.axisAlpha = 0.5,
+		                //valueAxis.logarithmic = true;
+		                valueAxis.title = "% Uso de CPU";
+		                serial2.addValueAxis(valueAxis);
+
+		                // GRAPH/*
+		                /**/var graph = new AmCharts.AmGraph();
+		                graph.type = "smoothedLine"; // try to change it to "column"
+		                graph.title = "Load Avg. 1 min";
+		                graph.balloonText = "Ultimo min: [[value]] %" 
+		                graph.valueField = "perc1";
+		                graph.lineAlpha = 1;
+		                graph.negativeBase = 0.2,
+		                graph.lineColor = "red";
+		                graph.fillAlphas = 0.02; // setting fillAlphas to > 0 value makes it area graph
+		                serial2.addGraph(graph);
+		                // GRAPH
+		                var graph = new AmCharts.AmGraph();
+		                graph.type = "line"; // try to change it to "column"
+		                graph.title = "Load Avg. 5 min";
+		                graph.balloonText = "Ultimos 5 min: [[value]] %" 
+		                graph.valueField = "perc5";
+		                graph.lineAlpha = 1;
+		                graph.lineColor = "green";
+		                graph.fillAlphas = 0.02; // setting fillAlphas to > 0 value makes it area graph
+		                serial2.addGraph(graph);
+						
+						var graph = new AmCharts.AmGraph();
+		                graph.type = "smoothedLine"; // try to change it to "column"
+		                graph.title = "Load Avg. 15 min";
+		                graph.valueField = "perc15";
+		                graph.balloonText = "Ultimos 15 min: [[value]] %" 
+		                graph.lineAlpha = 1;
+		                graph.lineColor = "blue";
+		                graph.fillAlphas = 0.02; // setting fillAlphas to > 0 value makes it area graph
+		                serial2.addGraph(graph);
+		                
+
+		                // CURSOR
+		                var chartCursor = new AmCharts.ChartCursor();
+		                chartCursor.cursorPosition = "mouse";
+		                chartCursor.categoryBalloonDateFormat = "DD/MM/YYYY JJ:NN";
+		                serial2.addChartCursor(chartCursor);
+
+		                var legend = new AmCharts.AmLegend();
+		                legend.align = "center"
+		                serial2.addLegend(legend);
+
+		                // SCROLLBAR
+		                var chartScrollbar = new AmCharts.ChartScrollbar();
+
+		                serial2.addChartScrollbar(chartScrollbar);
+
+		                // WRITE
+		                serial2.write("loadHist");
+            	    }
+				})
+
+            });
+
+            // this method is called when chart is first inited as we listen for "dataUpdated" event
+            function zoomChart2() {
+                // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+                
+                if(chartData2.length>40){
+  //              	serial2.zoomToIndexes(chartData2.length - 40, chartData2.length - 1);
+                }else{
+    //            	serial2.zoomToIndexes(chartData2.length - 2, chartData2.length - 1);
+                }
+            }
+ //#######################################
+		 var serial3;
+
+            var chartData3 = [];
+
+
+            AmCharts.ready(function () {
+                // first we generate some random data
+                //generateChartData();
+
+                $.ajax({
+					url: '/gestion/json/diskh/'+"{{host.ip}}/",
+					type: 'get',
+					dataType: 'json',
+					 success: function(data) {
+					 	for(var i=0; i < data.length;i++){
+					 		chartData3.push({
+		                        date: data[i].date,
+		                        path: data[i].path,
+		                        used: data[i].used,
+		                        size: data[i].total
+		                    });
+					 	}
+
+					    
+		                //console.log(chartData[0].date)
+		                // SERIAL CHART
+		                serial3 = new AmCharts.AmSerialChart();
+		                serial3.pathToImages = "/static/js/amcharts/images/";
+		                serial3.dataProvider = chartData3;
+		                serial3.categoryField = "date";
+		                serial3.dataDateFormat = "DD/MM/YYYY JJ:NN";
+		                serial3.titles = [{
+											"text": "Historial uso de Discos duro",
+											"size": 15
+										}]
+						
+
+		                // data updated event will be fired when chart is first displayed,
+		                // also when data will be updated. We'll use it to set some
+		                // initial zoom
+		                serial3.addListener("dataUpdated", zoomChart3);
+
+		                // AXES
+		                // Category
+		                var categoryAxis = serial3.categoryAxis;
+		                categoryAxis.parseDates = true; // in order char to understand dates, we should set parseDates to true
+		                categoryAxis.minPeriod = "hh"; // as we have data with minute interval, we have to set "mm" here.			 
+		                categoryAxis.dateFormats = [{
+							    period: 'fff',
+							    format: 'JJ:NN:SS'
+							}, {
+							    period: 'ss',
+							    format: 'JJ:NN:SS'
+							}, {
+							    period: 'mm',
+							    format: 'JJ:NN'
+							}, {
+							    period: 'hh',
+							    format: 'JJ:NN'
+							}, {
+							    period: 'DD',
+							    format: 'MMM DD'
+							}, {
+							    period: 'WW',
+							    format: 'MMM DD'
+							}, {
+							    period: 'MM',
+							    format: 'MMM YYYY'
+							}, {
+							    period: 'YYYY',
+							    format: 'MMM YYYY'
+							}];
+		                categoryAxis.gridAlpha = 0.07;
+		                categoryAxis.axisColor = "#DADADA";
+
+		                // Value
+		                var valueAxis = new AmCharts.ValueAxis();
+		                valueAxis.gridAlpha = 0.07;
+		                valueAxis.logarithmic = true;
+		                valueAxis.title = "Uso de Disco";
+		                serial3.addValueAxis(valueAxis);
+
+		                // GRAPH
+		                var graph = new AmCharts.AmGraph();
+		                graph.type = "smoothedLine"; // try to change it to "column"
+		                graph.title = "Disc";
+		                graph.legendValueText = "[[path]]:[[size]] Gb"
+		                graph.balloonText = "Usado: [[value]] GB" 
+		                graph.valueField = "used";
+
+		                graph.lineAlpha = 1;
+		                graph.lineColor = "red";
+		                graph.fillAlphas = 0.02; // setting fillAlphas to > 0 value makes it area graph
+		                serial3.addGraph(graph);
+		               
+
+		                // CURSOR
+		                var chartCursor = new AmCharts.ChartCursor();
+		                chartCursor.cursorPosition = "mouse";
+		                chartCursor.categoryBalloonDateFormat = "DD/MM/YYYY JJ:NN";
+		                serial3.addChartCursor(chartCursor);
+
+		                var legend = new AmCharts.AmLegend();
+		                legend.align = "center"
+		                serial3.addLegend(legend);
+		                // SCROLLBAR
+		                var chartScrollbar = new AmCharts.ChartScrollbar();
+
+		                serial3.addChartScrollbar(chartScrollbar);
+
+		                // WRITE
+		                serial3.write("diskH");
+            	    }
+				})
+				
+            });
+
+            // this method is called when chart is first inited as we listen for "dataUpdated" event
+            function zoomChart3() {
+                // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+                
+                if(chartData3.length>40){
+                	//serial3.zoomToIndexes(chartData3.length - 40, chartData3.length - 1);
+
+                }else{
+                	//serial3.zoomToIndexes(chartData3.length - 2, chartData3.length - 1);
+                	console.log("-----s")
+                }
+            }
+/*	       */
+
+
+  	</script>
+
+{% endblock statics %}
+
+{% block main_content %}	
+
+
+<div id="tabs">
+	<ul>
+	    <li class='basic'><a href="#tabs-1">Detalles</a></li>
+	    <li class='basic'><a href="#tabs-2">Monit. Discos</a></li>
+	    <li class='basic'><a href="#tabs-3">Monit. de procesos</a></li>
+	    <li class='basic'><a href="#tabs-4">Storages</a></li>
+	    <li class='basic'><a href="#tabs-5">Devices</a></li>
+	    <li class='basic'><a href="#tabs-6">Software</a></li>
+	    <li class='basic'><a href="#tabs-7">Interfaces</a></li>
+	</ul>
+	<div id="tabs-1">
+		<div class="Panel">
+			<div class="cabecera morado">&nbsp;&nbsp; {{host.hostname}} - {{host.ip}} </div>
+			<div class="contenido">
+				<div class="row">
+					<div class="column medium-2 text-right"><label><strong>Contacto:</strong></label></div>
+					<div class="column medium-5 end"><label class='arsenal'>{{host.contact}}</label></div>
+				</div>
+				<div class="row">
+					<div class="column medium-2 text-right"><label><strong>Ubicacion:</strong></label></div>
+					<div class="column medium-5 end"><label class='arsenal'>{{host.location}}</label></div>
+				</div>
+				<div class="row">
+					<div class="column medium-2 text-right"><label><strong>Descripcion:</strong></label></div>
+					<div class="column medium-5 end"><label class='arsenal'>{{host.description}}</label></div>
+				</div>
+				<div class="row">
+					<div class="column medium-2 text-right"><label><strong>Uptime:</strong></label></div>
+					<div class="column medium-5 end"><label class='arsenal'>{{host.uptime}}</label></div>
+				</div>
+				<div class="row">
+					<div class="column medium-2 text-right"><label><strong>Servicios:</strong></label></div>
+					<div class="column medium-5 end"><label class='arsenal'>{{host.services}}</label></div>
+				</div>
+				<div class="row">
+					<div class="column medium-2 text-right"><label><strong>Procesos:</strong></label></div>
+					<div class="column medium-5 end"><label class='arsenal'>{{host.processes}}</label></div>
+				</div>
+				<div class="row">
+					<div class="column medium-2 text-right"><label><strong>Usuarios:</strong></label></div>
+					<div class="column medium-5 end"><label class='arsenal'>{{host.users}}</label></div>
+				</div>
+				<div class="row">
+					<div class="column medium-2 text-right"><label><strong>Ult. Actualizacion:</strong></label></div>
+					<div class="column medium-5 end"><label class='arsenal'><i class='fi-clock'></i> Hace {{host.last_update|timesince}}</label></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div id="tabs-2">
+		<table id='mitabla' class="table table-bordered">
+			<caption class='caption'></caption>
+			<thead>
+			    <tr class='basic'>
+				    <th width="100px">Ruta</th>
+				    <th width="120px">Dispositivo</th>		      
+				    <th width="100px">Tamaño Gb</th>	
+				    <th width="90px">Uso %</th>
+				    <th width="80px">Disp. Gb</th>
+				    <th width="80px">% Min</th>
+				    <th width="70px">Estado</th>
+				    <th width="170px">Msg. Adv.</th>
+				    <th width="120px">Actualizado</th>
+				    
+			    </tr>
+			  </thead>
+			<tbody> 
+				{% for disk in disks %} 
+					<tr>
+						<td>{{disk.disk_path}}</td>
+						<td>{{disk.device}}</td>
+						<td>{{disk.total}}</td>
+						<td>
+							<label>{{disk.percent}}%</label>
+							<div class="progress" style='border:1px solid #551177;'>
+							  <span class="meter" style="width:{{disk.percent}}%"></span>
+							</div>							
+						</td>
+						<td>{{disk.free}}</td>
+						<td>{{disk.minimun}}</td>
+						<td>
+							{% if disk.error_flag == 0 %}
+						 		<img src="{{STATIC_URL}}img/ok.png" alt="" style='width: 30px'> 
+							{% else %}
+								<img src="{{STATIC_URL}}img/warning.png" alt="" style='width: 30px'> 
+							{% endif %} 
+						</td>
+						<td>{{disk.error_msg|default:"Ninguno"}}</td>
+						<td> <i class='fi-clock'></i> {{disk.last_update|timesince}}</td>
+					</tr>
+				{% empty %}
+					<tr>
+						<td  colspan="9">
+							<div class="row">
+							<div class="column medium-4">
+								No se pudo obtener registros para este host, posiblemente no este configurado en su agente snmp o no lo soporte.
+							</h4>
+							</div>
+							<div class="column medium-3 end">
+								<img src="{{STATIC_URL}}img/female.png" style='width:200px'>
+							</div>
+						</div>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div id="tabs-3">
+		<table id='mitabla' class="table table-bordered">
+			<caption class='caption'></caption>
+			<thead>
+			    <tr class='basic'>
+				    <th width="130px">Proceso</th>
+				    <th width="100px">Cantidad</th>		      
+				    <th width="100px">Minimo</th>	
+				    <th width="100px">Maximo</th>
+				    <th width="80px">Estado</th>
+				    <th width="230px">Msg Error</th>
+				    <th width="230px">Ult. Actual.</th>
+				    
+			    </tr>
+			  </thead>
+			<tbody> 
+				{% for proc in procs %} 
+					<tr>
+						<td>{{proc.name}}</td>
+						<td>{{proc.count}}</td>
+						<td>{{proc.minimun}}</td>
+						<td>{{proc.maximun}}</td>						
+						<td>
+							{% if proc.err_flag == 0 %}
+						 		<img src="{{STATIC_URL}}img/ok.png" alt="" style='width: 30px'> 
+							{% else %}
+								<img src="{{STATIC_URL}}img/warning.png" alt="" style='width: 30px'> 
+							{% endif %} 
+						</td>
+						<td>{{proc.err_msg|default:"Ninguno"}}</td>
+						<td><i class='fi-clock'></i> hace {{proc.last_update|timesince}}</td>
+						
+					</tr>
+					{% empty %}
+					<tr>
+						<td  colspan="7">
+							<div class="row">
+							<div class="column medium-4">
+								Aparentemente no se ah registrado ningun proceso para monitorizar, configure su agente SNMP
+							</h4>
+							</div>
+							<div class="column medium-3 end">
+								<img src="{{STATIC_URL}}img/female.png" style='width:200px'>
+							</div>
+						</div>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<!-- tab 4 -->
+		<div id="tabs-4">
+		<table id='mitabla' class="table table-bordered">
+			<caption class='caption'></caption>
+			<thead>
+			    <tr class='basic'>
+				    <th width="150px">Nombre</th>
+				    <th width="130px">Tamaño MB</th>		      
+				    <th width="130px">Ocupado MB</th>
+				    <th width="130px">Ocupado %</th>	
+			    </tr>
+			  </thead>
+			<tbody> 
+				{% for storage in storages %} 
+					<tr>
+						<td>{{storage.desc}}</td>
+						<td>{{storage.size}}</td>
+						<td>{{storage.used}}</td>
+						<td>
+							<label>{{storage.percent_used}}%</label>
+							<div class="progress" style='border:1px solid #551177;'>
+							  <span class="meter" style="width:{{storage.percent_used}}%"></span>
+							</div>							
+						</td>
+					</tr>
+					{% empty %}
+					<tr>
+						<td  colspan="7">
+							<div class="row">
+							<div class="column medium-4">
+								Aparentemente no se ah registrado ningun proceso para monitorizar, configure su agente SNMP
+							</h4>
+							</div>
+							<div class="column medium-3 end">
+								<img src="{{STATIC_URL}}img/female.png" style='width:200px'>
+							</div>
+						</div>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<!-- end tab 4 -->
+	<!-- tab 5 -->
+		<div id="tabs-5">
+		<table id='dev' class="table table-bordered">
+			<caption class='caption'></caption>
+			<thead>
+			    <tr class='basic'>
+				    <th width="150px">Nombre</th>
+				    <th width="130px">Estado</th>		      
+			    </tr>
+			  </thead>
+			<tbody> 
+				{% for dev in devices %} 
+					<tr>
+						<td>{{dev.desc}}</td>
+						<td>{{dev.status}}</td>
+					</tr>
+					{% empty %}
+					<tr>
+						<td  colspan="7">
+							<div class="row">
+							<div class="column medium-4">
+								Aparentemente no se ah registrado ningun proceso para monitorizar, configure su agente SNMP
+							</h4>
+							</div>
+							<div class="column medium-3 end">
+								<img src="{{STATIC_URL}}img/female.png" style='width:200px'>
+							</div>
+						</div>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<!-- end tab 5 -->
+
+	<!-- tab 6 -->
+		<div id="tabs-6">
+		<table id='sw' class="table table-bordered">			
+			<thead>
+			    <tr class='basic'>
+				    <th width="150px">Nombre</th>
+				    <th width="130px">Ruta</th>		      
+				    <th width="130px">Parametros</th>
+				    <th width="130px">Tipo</th>	
+				    <th width="130px">Estado</th>	
+			    </tr>
+			  </thead>
+			<tbody> 
+				{% for sw in sws %} 
+					<tr>
+						<td>{{sw.name}}</td>
+						<td>{{sw.path}}</td>
+						<td>{{sw.parameters}}</td>
+						<td>{{sw.type}}</td>
+						<td>{{sw.status}}</td>
+					</tr>
+					{% empty %}
+					<tr>
+						<td  colspan="7">
+							<div class="row">
+							<div class="column medium-4">
+								Aparentemente no se ah registrado ningun proceso para monitorizar, configure su agente SNMP
+							</h4>
+							</div>
+							<div class="column medium-3 end">
+								<img src="{{STATIC_URL}}img/female.png" style='width:200px'>
+							</div>
+						</div>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<!-- end tab 6 -->
+
+	<!-- tab 7 -->
+		<div id="tabs-7">
+		<table id='mitabla' class="table table-bordered">
+			<caption class='caption'></caption>
+			<thead>
+			    <tr class='basic'>
+				    <th width="150px">Nombre</th>
+				    <th width="130px">Velocidad mbs</th>		      
+				    <th width="130px">Admin Status</th>
+				    <th width="130px">Oper Status</th>
+				    <th width="130px">In Errors</th>	
+				    <th width="130px">Out Errors</th>
+				    <th width="130px">In Discarts</th>	
+				    <th width="130px">Out Discarts</th>		
+
+			    </tr>
+			  </thead>
+			<tbody> 
+				{% for interf in interfaces %} 
+					<tr>
+						<td>{{interf.desc}}</td>
+						<td>{{interf.speed}}</td>
+						<td>{{interf.admin_status}}</td>
+						<td>{{interf.oper_status}}</td>
+						<td>{{interf.inErrors}}</td>
+						<td>{{interf.outErrors}}</td>
+						<td>{{interf.inDiscards}}</td>
+						<td>{{interf.outDiscards}}</td>
+					</tr>
+					{% empty %}
+					<tr>
+						<td  colspan="7">
+							<div class="row">
+							<div class="column medium-4">
+								Aparentemente no se ah registrado ningun proceso para monitorizar, configure su agente SNMP
+							</h4>
+							</div>
+							<div class="column medium-3 end">
+								<img src="{{STATIC_URL}}img/female.png" style='width:200px'>
+							</div>
+						</div>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<!-- end tab 7 -->
+
+
+
+</div>
+
+{% if memory %}
+
+<div class="row">
+	<div class="column medium-4 text-center" >
+		<div id="chartdiv" style="width:100%; height:300px;"></div>	
+		<label>Memoria usada: <span id="uram">{{memory.used_ram}}</span> de {{memory.ram}}	</label>
+	</div>
+	<div class="column medium-4 text-center" >
+		<div id="swap" style="width:100%; height:300px;"></div>	
+		<label>Swap usada: <span id="uswap"> {{uswap}} </span> de {{memory.swap}}	</label>
+	</div>
+	<div class="column medium-4 text-center" >
+		<div id="load_avg" style="width:100%; height:300px;"></div>	
+		<label>Carga promedio: <span id="lavg">{{load.load_1}} </span> de 100%</label>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="column medium-12 text-center" >
+		<div id="MemHist" style="width:95%; height:400px;"></div>
+	</div>
+</div>
+<div class="row">
+	<div class="column medium-12 text-center" >
+		<div id="loadHist" style="width:95%; height:400px;"></div>
+	</div>
+</div>
+<div class="row">
+	<div class="column medium-12 text-center" >
+		<div id="diskH" style="width:95%; height:400px;"></div>
+	</div>
+</div>
+<br>	
+
+{% endif %}
+
+{% endblock main_content %}

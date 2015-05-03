@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block statics %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/select2.css">
+	<script src='{{STATIC_URL}}js/vendor/jquery/jquery.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/select2.min.js'></script>
+	<script src='{{STATIC_URL}}js/vendor/select2_locale_es.js'></script>
+	<script>
+		$(document).ready(function() {
+			 $("select").select2({
+			 	  width: "resolve"
+			 }); 
+			  $("select").attr('required', 'true');
+			  $("#id_descripcion").attr('required', 'true');
+			  $("#id_ubicacion_antes").attr('required', 'true');
+			  $("#id_ubicacion_despues").attr('required', 'true');
+
+		});
+	</script>
+{% endblock statics %}
+
+{% block main_content %}
+	{{device}}
+	<form method="POST">
+		{% csrf_token %}
+		<div class="row">
+			<div class="columns medium-3">
+				<label for="id_dispositivo">{{form.dispositivo.label}}:</label>
+				{{form.dispositivo}}
+				{{form.dispositivo.errors}}
+			</div>
+			<div class="columns medium-3 end">
+				<label for="id_tipo_entrada">{{form.tipo_entrada.label}}:</label>
+				{{form.tipo_entrada}}
+				{{form.tipo_entrada.errors}}
+			</div>
+			<div class="columns medium-3">
+				<label for="id_estado_antes">{{form.estado_antes.label}}:</label>
+				{{form.estado_antes}}
+				{{form.estado_antes.errors}}
+			</div>
+			<div class="columns medium-3 end">
+				<label for="id_ubicacion_antes">{{form.ubicacion_antes.label}}:
+				{{form.ubicacion_antes}}
+				{{form.ubicacion_antes.errors}}
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="columns medium-8 end">
+				<label for="id_descripcion">{{form.descripcion.label}}:
+					{{form.descripcion}}
+					{{form.descripcion.errors}}
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="columns medium-3">
+				<label for="id_estado_despues">{{form.estado_despues.label}}:</label>
+				{{form.estado_despues}}
+				{{form.estado_despues.errors}}
+			</div>
+			<div class="columns medium-3 end">
+				<label for="id_ubicacion_despues">{{form.ubicacion_despues.label}}:
+				{{form.ubicacion_despues}}
+				{{form.ubicacion_despues.errors}}
+				</label>
+			</div>
+			<div class="columns medium-3 end">
+				<button class="button small " data-hint="Seguidos" type="submit">
+				  <i class="fi-save"></i> Guardar
+				</button>
+			</div>
+		</div>
+		
+	</form>
+{% endblock main_content %}

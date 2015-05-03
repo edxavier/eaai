@@ -1,0 +1,33 @@
+	<form class="custom loginfrm" method="POST">
+				 {% csrf_token %}
+				 {% if form.non_field_errors %}				 	
+				 	<div data-alert class="alert-box warning radius">
+					  Por favor ingrese un nombre de usuario y clave correctas
+					  <audio src="{{MEDIA_URL}}audio/dubstep_alert.mp3" autoplay></audio>
+					  <a href="#" class="close">&times;</a>
+					</div>	
+				 {% endif %}
+
+				<div class="panel radius">
+					<h5 class="loginTitle">Inicia Sesion <i class="fi-shield"></i> </h5>				    
+				     <div class="row collapse">
+					    <div class="small-3 large-2 columns">
+					      <span class="prefix"><i class="fi-torsos-male-female"></i>  </span>
+					    </div>
+					    <div class="small-9 large-10 columns">
+					      <input type="text" name="username" placeholder="Usuario" required>
+					    </div>
+					</div> 
+					<div class="row collapse">
+					    <div class="small-3 large-2 columns">
+					      <span class="prefix"><i class="fi-lock"></i>  </span>
+					    </div>
+					    <div class="small-9 large-10 columns">
+					      <input type="password" name="password" placeholder="Clave" required>
+					    </div>
+					</div>
+					<button class="button small large-12" data-hint="Seguidos" type="submit">
+						  <i class="fi-key"></i> Indentificame
+					</button>
+				</div>
+	</form>

@@ -20,16 +20,19 @@ DATABASES = {
         # The following settings are not used with sqlite3:
         #'USER': 'stecnica',
         #'PASSWORD': 'stecnica',
+        #'HOST': '192.168.137.200',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.                   # Set to empty string for default.
         'USER': 'root',
         'PASSWORD': 'root',
-        #'HOST': '192.168.137.200',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.                   # Set to empty string for default.
+        
     }
 }
 
 from unipath import Path
+import os
 
 #Obtener la ruta del proyecto y regresar un nivel
 RUTA_PROYECTO = Path(__file__).ancestor(2)
+RUTA_STATIC= os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2]+['static'])
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -73,7 +76,7 @@ MEDIA_URL = '/media/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
-STATIC_ROOT = ''
+#STATIC_ROOT = RUTA_PROYECTO.child('static')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -138,7 +141,10 @@ INSTALLED_APPS = (
     'bitacora',
     'sistemas',
     'dispositivos',
+    'horario',
+    'gestion',
     'usuario',
+    #'tastypie',
     # Uncomment the next line to enable the admin:
     'suitlocale',
     'suit',

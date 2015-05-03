@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block statics %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css">
+	<script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
+
+	<script>
+		
+
+		$(document).ready(function() {
+			setInterval(refresh, 15000);
+			
+			function refresh()
+			{
+				$( "#hostlist" ).load( "/gestion/hosts_large/ #hostlist", function() {
+				});			
+			}
+
+
+		});
+
+	</script>
+{% endblock statics %}
+
+{% block main_content %}
+
+<dl class="sub-nav ">
+	<dt>Vista:</dt>
+	<dd class="sn" id='lista'><a href="{% url 'hosts_list' %}">
+			<i class='fi-list-bullet'></i> Lista</a>
+	</dd>
+	<dd class="sn " id='cuad'><a href="{% url 'hosts_cuadricula' %}">
+			<i class='fi-list-bullet'></i> Cuadricula</a>
+	</dd>
+</dl>
+<div id='hostlist'>
+	
+	{% if hosts %}
+	<div class="row" id='cuadricula' >
+			<h5 class='subheader txtlineBottongrey colorAzulOscuro2' >
+			</h5>
+			<ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-4" data-equalizer> 
+				{% for host in hosts %}			
+						<li>
+							<div class="panel" data-equalizer-watch>				
+								{% if host.connected %}
+								 	<img src="{{STATIC_URL}}img/Connected.png" alt="" style='width: 45px'> 
+								{% else %}
+									<img src="{{STATIC_URL}}img/Disconnected.png" alt="" style='width: 45px'> 
+								{% endif %} &nbsp;&nbsp;&nbsp;
+								{% if host.status == "ok" %}
+								 	<img src="{{STATIC_URL}}img/Good.png" alt="" style='width: 30px'> 
+								{% else %}
+									<img src="{{STATIC_URL}}img/Alert.png" alt="" style='width: 30px'> 
+								{% endif %} 
+								<h5 class="txtlineBottonBluenice basic"> {{ host.ip }} / {{host.hostname}} </h5>
+								<label class='' ><i class='fi-clock'></i> Actualizado hace {{host.last_update|timesince}}</label>
+								<label class='arsenal' > <strong>Upttime:</strong> {{host.uptime}} <br> <strong>Contacto:</strong>{{host.contact}}</label>
+							</div>
+						</li>
+				{% endfor %}
+			</ul>
+	</div>
+
+	{% else %}
+			<div class="row">
+							<div class="column medium-5">
+								<h4  style='font-family: Jose'>
+								No se ha registrado ninguna entrada aun.
+							</h4>
+							</div>
+							<div class="column medium-3 end">
+								<img src="{{STATIC_URL}}img/female.png" style='width:200px'>
+							</div>
+			</div>
+	{% endif %}
+</div>	
+
+{% endblock main_content %}

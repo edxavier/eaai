@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block statics %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.min.css">
+	<script src='{{STATIC_URL}}js/vendor/jquery-ui.min.js'></script>
+
+	<script>
+		
+
+		$(document).ready(function() {
+			setInterval(refresh, 5000);
+			var lista = true
+			function refresh()
+			{
+				$( "#hostlist" ).load( "/gestion/hosts/ #hostlist", function() {
+				});
+				
+			}
+
+		});
+
+	</script>
+{% endblock statics %}
+
+{% block main_content %}
+<dl class="sub-nav ">
+	<dt>Vista:</dt>
+	<dd class="sn" id='lista'><a href="{% url 'hosts_list' %}">
+			<i class='fi-list-bullet'></i> Lista</a>
+	</dd>
+	<dd class="sn " id='cuad'><a href="{% url 'hosts_cuadricula' %}">
+			<i class='fi-list-bullet'></i> Cuadricula</a>
+	</dd>
+</dl>
+
+<div id='hostlist'>
+	
+	{% if hosts %}
+
+		<table id='mitabla' class="table table-bordered">
+			<caption class='caption'>Listado de equipos/sistemas</caption>
+		  <thead>
+		    <tr class='basic'>
+		      <th width="120px">IP</th>
+		      <th width="120px">Host</th>		      
+		      <th width="190px">Uptime</th>
+		      <th width="90px">Load avg</th>
+		      <th width="90px">Procesos</th>
+		      <th width="90px">Disk</th>
+		      <th width="100px">RAM</th>
+		      <th width="100px">Conexion</th>
+		      <th width="190px">Ultima Act.</th>
+		    </tr>
+		  </thead>
+		  <tbody>  
+			
+			{% for host in  hosts %}
+				<tr>
+					<td>
+						<a class='arsenal' href="{% url 'hosts_detail' host.ip %}"><i class='fi-page-search'> </i> {{host.ip}} </a>
+					</td> 
+					<td>{{host.hostname}}</td>
+					<td>{{host.uptime}}</td> 
+					<td>
+						{% if host.load_status == "ok" %}
+						 	<img src="{{STATIC_URL}}img/ok_blue.png" alt="" style='width: 20px'> 
+						{% else %}
+							<img src="{{STATIC_URL}}img/alert2.png" alt="" style='width: 20px'> 
+						{% endif %} 
+					</td> 
+					<td>
+						{% if host.procs_status == "ok" %}
+						 	<img src="{{STATIC_URL}}img/ok_blue.png" alt="" style='width: 20px'> 
+						{% else %}
+							<img src="{{STATIC_URL}}img/alert_red.png" alt="" style='width: 20px'> 
+						{% endif %} 
+					</td> 
+					<td>
+						{% if host.disks_status == "ok" %}
+						 	<img src="{{STATIC_URL}}img/ok_blue.png" alt="" style='width: 20px'> 
+						{% else %}
+							<img src="{{STATIC_URL}}img/alert2.png" alt="" style='width: 20px'> 
+						{% endif %} 
+					</td> 
+					<td>
+						{% if host.mem_status == "ok" %}
+						 	<img src="{{STATIC_URL}}img/ok_blue.png" alt="" style='width: 20px'> 
+						{% else %}
+							<img src="{{STATIC_URL}}img/alert2.png" alt="" style='width: 20px'> 
+						{% endif %} 
+					</td> 
+					<td>
+						{% if host.connected %}
+						 	<img src="{{STATIC_URL}}img/Connected.png" alt="" style='width: 35px'> 
+						{% else %}
+							<img src="{{STATIC_URL}}img/Disconnected.png" alt="" style='width: 35px'> 
+						{% endif %} 
+					</td> 
+					<td> <i class='fi-clock'></i> Hace {{host.last_update|timesince}}</td> 
+				</tr>
+			{% endfor %}
+
+
+			</tbody>
+		</table>
+	{% else %}
+			<div class="row">
+							<div class="column medium-5">
+								<h4  style='font-family: Jose'>
+								No se ha registrado ninguna entrada aun.
+							</h4>
+							</div>
+							<div class="column medium-3 end">
+								<img src="{{STATIC_URL}}img/female.png" style='width:200px'>
+							</div>
+			</div>
+	{% endif %}
+</div>	
+{% endblock main_content %}

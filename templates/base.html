@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 {% comment %}
 Plantilla base que solo incluira los ccs y js basicos necesario en todas las paginas
@@ -19,13 +20,17 @@ Plantilla base que solo incluira los ccs y js basicos necesario en todas las pag
 <link rel="stylesheet" href="{{STATIC_URL}}css/normalize.css">
 <link rel="stylesheet" href="{{STATIC_URL}}css/foundation.min.css">
 <link rel="stylesheet" href="{{STATIC_URL}}css/foundation-icons.css">
-<link rel="stylesheet" href="">
 <link rel="stylesheet" href="{{STATIC_URL}}css/estilos.css">
+<link rel="stylesheet" href="{{STATIC_URL}}css/myUI.css">
+<style>
+	body{background: url("/static/img/bg_pattern.jpg") top left}
+</style>
 {% comment %}
+<link rel="stylesheet" href="{{STATIC_URL}}css/estilo.css">
 JavaScript
-
 {% endcomment %}
 <script src="{{STATIC_URL}}js/vendor/modernizr.js"></script>
+
 
 </head>
 
@@ -35,17 +40,21 @@ JavaScript
 		<header id="header" class="show-for-medium-up">
 			<div class="row">
 				<div class="medium-6 columns">
-					<h4> <i class="fi-web"></i>  Bienvenido a Estacion Radar</h4>
-					<h6><i class="fi-eye"></i>  Supervicion de Electronica y Comunicaciones</h6>	
+					<h6  class="arsenal"><i class="fi-eye"></i> Estacion Radar - Supervicion de Electronica y Comunicaciones</h6>
+					<label style="color:#E7E7F4"> <i class='fi-calendar'></i> {% now "l, d \d\e F Y" %} </label>
 				</div>
-				<div class="medium-6 columns">
+				<div class="medium-4 columns">
+					<label id="localtime" style="color:#E7E7F4;font-size: 16px"> </label>
+					<label id="utctime" style="color:#E7E7F4;font-size: 15px"> </label>
+				</div>
+				<div class="medium-2 columns">
 					<div class="user text-right">
 						{% if user.is_authenticated %}
 							<a class="th radius" style="width:74px;">
 							  <img  src="{{MEDIA_URL}}{{user.perfil.foto}}">
 							</a>	
 
-							<span class="label radius">
+							<span class="label radius arsenal">
 								{% if user.first_name %}
 									{{user.first_name}} {{user.last_name}} 
 								{% else %}
@@ -65,6 +74,10 @@ JavaScript
 </div>
 
 <!--Cuerpo-->
+{% block full_body %}
+	
+{% endblock full_body %}
+
 <div class="row">
 <!--seccion izquierda-->
 	<div class="large-2 columns show-for-medium-up">
@@ -159,10 +172,36 @@ JavaScript
 
 <script src="{{STATIC_URL}}js/vendor/jquery.js"></script>
 <script src="{{STATIC_URL}}js/foundation.min.js"></script>
-<script src="{{STATIC_URL}}js/foundation/foundation.joyride.js"></script>
 <script>
 	$(document).foundation();
+	getTheTime();	
+	setInterval(getTheTime, 1000);
 
+	function getTheTime(){
+		hour=new Date().getHours();
+		minutes=new Date().getMinutes();
+		seconds=new Date().getSeconds();
+
+		UTC_hour=new Date().getUTCHours();
+		UTC_minutes=new Date().getUTCMinutes();
+		UTC_seconds=new Date().getUTCSeconds();
+
+		if(hour<10){hour="0"+hour;}
+		if(UTC_hour<10){ UTC_hour="0"+UTC_hour}
+		if(seconds<10){seconds="0"+seconds;UTC_seconds="0"+UTC_seconds}
+		if(minutes<10){minutes="0"+minutes;UTC_minutes="0"+UTC_minutes}
+
+		if(hour>11){
+			if(hour>12){hour=hour-12}
+			if(hour<10){hour="0"+hour}
+			theTime=hour+":"+minutes+":"+seconds+" PM"
+		}
+		else{theTime=hour+":"+minutes+":"+seconds+" AM"}
+
+		UTC_Time=UTC_hour+":"+UTC_minutes+":"+UTC_seconds+" UTC"
+		$( "#localtime" ).html(theTime)
+		$( "#utctime" ).html(UTC_Time)
+	}
 
 	$('.sn').hover(
        function(){ $(this).addClass('active') },
